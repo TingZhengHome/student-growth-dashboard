@@ -1,0 +1,1600 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>學生學習成長檔案與能力儀表板</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  
+  <style>
+    :root {
+      --background: #f8fafc;
+      --foreground: #0f172a;
+      --card: #ffffff;
+      --border: #e2e8f0;
+      --muted-foreground: #64748b;
+      --accent: #f1f5f9;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --background: #090d16;
+        --foreground: #f8fafc;
+        --card: #111827;
+        --border: #1f2937;
+        --muted-foreground: #94a3b8;
+        --accent: #1e293b;
+      }
+    }
+    .radar-polygon {
+      transition: all 0.4s ease-out;
+    }
+    .metric-card:hover {
+      transform: translateY(-2px);
+    }
+  </style>
+
+  <!-- original style removed -->
+  <style style="display:none">
+    /* Custom tooltip and animations */
+    .radar-polygon {
+      transition: all 0.4s ease-out;
+    }
+    .metric-card:hover {
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+<body class="bg-[var(--background)] text-[var(--foreground)] p-6 min-h-screen antialiased">
+
+  <!-- Header -->
+  <div class="max-w-6xl mx-auto space-y-6">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[var(--border)] pb-5">
+      <div>
+        <div class="flex items-center gap-3">
+          <span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-blue-500/10 text-blue-500 border border-blue-500/20">家教事業專屬分析引擎</span>
+          <span class="text-xs text-[var(--muted-foreground)]"><span>資料來源：Figma/FigJam 歷次白板學習痕跡與實測狀態 × Notion 課堂紀錄 (全體學生統計統一自 2026 年 10 月起算)</span></span>
+        </div>
+        <h1 class="text-2xl font-bold tracking-tight mt-1">學生長期學習歷程與能力儀表板</h1>
+        <p class="text-sm text-[var(--muted-foreground)]">跨週期追蹤答題盲點、多益/段考進步趨勢與核心能力雷達</p>
+        <div class="flex items-center gap-2 mt-2">
+          <button onclick="copyCurrentStudentParentLink()" class="px-2.5 py-1 text-xs font-medium rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white transition flex items-center gap-1 shadow-sm">
+            <span>🔗 複製當前學生家長隱私連結</span>
+          </button>
+          <button onclick="openCurrentStudentParentPage()" class="px-2.5 py-1 text-xs font-medium rounded-lg bg-[var(--card)] hover:bg-[var(--accent)] text-[var(--foreground)] border border-[var(--border)] transition flex items-center gap-1">
+            <span>👁️ 預覽家長頁面</span>
+          </button>
+          <button onclick="openAllLinksModal()" class="px-2.5 py-1 text-xs font-medium rounded-lg bg-[var(--card)] hover:bg-[var(--accent)] text-[var(--muted-foreground)] hover:text-[var(--foreground)] border border-[var(--border)] transition flex items-center gap-1">
+            <span>📋 全體私密連結一覽</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Student Selector Tabs -->
+      <div class="flex items-center gap-1.5 bg-[var(--card)] border border-[var(--border)] p-1.5 rounded-xl shadow-sm overflow-x-auto max-w-full">
+        <button onclick="switchStudent('enxin')" id="btn-enxin" class="student-btn px-3 py-1.5 text-xs font-medium rounded-lg bg-[var(--foreground)] text-[var(--background)] transition whitespace-nowrap">
+          恩忻 (多益)
+        </button>
+        <button onclick="switchStudent('yuying')" id="btn-yuying" class="student-btn px-3 py-1.5 text-xs font-medium rounded-lg text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition whitespace-nowrap">
+          育穎 (多益)
+        </button>
+        <button onclick="switchStudent('zien')" id="btn-zien" class="student-btn px-3 py-1.5 text-xs font-medium rounded-lg text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition whitespace-nowrap">
+          子恩 (雅思)
+        </button>
+        <button onclick="switchStudent('bowen')" id="btn-bowen" class="student-btn px-3 py-1.5 text-xs font-medium rounded-lg text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition whitespace-nowrap">
+          柏文 (會考)
+        </button>
+        <button onclick="switchStudent('weiyu')" id="btn-weiyu" class="student-btn px-3 py-1.5 text-xs font-medium rounded-lg text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition whitespace-nowrap">
+          惟羽 (會考)
+        </button>
+        <button onclick="switchStudent('junfu')" id="btn-junfu" class="student-btn px-3 py-1.5 text-xs font-medium rounded-lg text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition whitespace-nowrap">
+          鈞富 (會考)
+        </button>
+        <button onclick="switchStudent('joseph')" id="btn-joseph" class="student-btn px-3 py-1.5 text-xs font-medium rounded-lg text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition whitespace-nowrap">
+          Joseph (高中段考)
+        </button>
+        <button onclick="switchStudent('ryan')" id="btn-ryan" class="student-btn px-3 py-1.5 text-xs font-medium rounded-lg text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition whitespace-nowrap">
+          Ryan (中級英檢)
+        </button>
+      </div>
+    </div>
+
+    <!-- Student Top Highlights Card -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div class="metric-card bg-[var(--card)] border border-[var(--border)] p-4 rounded-xl shadow-sm transition">
+        <span class="text-xs text-[var(--muted-foreground)]">當前階段 / 目標</span>
+        <div class="text-xl font-bold mt-1 text-blue-500" id="stat-target">多益 850+ 藍金證書</div>
+        <div class="text-xs text-[var(--muted-foreground)] mt-1" id="stat-target-sub">目標考試：12 月公開測驗</div>
+      </div>
+      <div class="metric-card bg-[var(--card)] border border-[var(--border)] p-4 rounded-xl shadow-sm transition">
+        <span class="text-xs text-[var(--muted-foreground)]">最新預估實力分數</span>
+        <div class="text-xl font-bold mt-1 text-emerald-500" id="stat-score">760 分 <span class="text-xs font-normal text-emerald-600">(多益小模擬 3~6 回盤整)</span></div>
+        <div class="text-xs text-[var(--muted-foreground)] mt-1" id="stat-score-sub">第四回模擬測驗估算</div>
+      </div>
+      <div class="metric-card bg-[var(--card)] border border-[var(--border)] p-4 rounded-xl shadow-sm transition">
+        <span class="text-xs text-[var(--muted-foreground)]">白板累積劃記分析</span>
+        <div class="text-xl font-bold mt-1 text-purple-500" id="stat-notes">544 筆筆跡 / 4 回試題</div>
+        <div class="text-xs text-[var(--muted-foreground)] mt-1" id="stat-notes-sub">已鎖定 12 個高頻盲點</div>
+      </div>
+      <div class="metric-card bg-[var(--card)] border border-[var(--border)] p-4 rounded-xl shadow-sm transition">
+        <span class="text-xs text-[var(--muted-foreground)]">課後作業繳交與掌握度 (10月起算)</span>
+        <div class="text-xl font-bold mt-1 text-amber-500" id="stat-hw">92% <span class="text-xs font-normal text-amber-600">優良</span></div>
+        <div class="text-xs text-[var(--muted-foreground)] mt-1" id="stat-hw-sub">單字記憶持續保持在 9 成</div>
+      </div>
+    </div>
+
+    <!-- Main Visualizations Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+      <!-- Left Column: Radar Chart (5 cols) -->
+      <div class="lg:col-span-5 bg-[var(--card)] border border-[var(--border)] p-5 rounded-2xl shadow-sm flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between">
+            <h3 class="font-bold text-base">六大核心能力雷達分析</h3>
+            <span class="text-xs px-2 py-0.5 rounded bg-[var(--accent)] text-[var(--muted-foreground)]">最新評估</span>
+          </div>
+          <p class="text-xs text-[var(--muted-foreground)] mt-0.5">統一以 CEFR C2 母語級實力 (頂部100分) 為全體學生固定參照基準</p>
+        </div>
+
+        <!-- Radar SVG -->
+        <div class="my-3 flex items-center justify-center">
+          <svg class="w-72 h-72" viewBox="-120 -120 240 240">
+            <!-- Background Web Rings -->
+            <polygon points="0,-100 86.6,-50 86.6,50 0,100 -86.6,50 -86.6,-50" fill="none" stroke="currentColor" class="text-[var(--border)] opacity-60" stroke-width="1"/>
+            <polygon points="0,-75 64.95,-37.5 64.95,37.5 0,75 -64.95,37.5 -64.95,-37.5" fill="none" stroke="currentColor" class="text-[var(--border)] opacity-40" stroke-width="1"/>
+            <polygon points="0,-50 43.3,-25 43.3,25 0,50 -43.3,25 -43.3,-25" fill="none" stroke="currentColor" class="text-[var(--border)] opacity-30" stroke-width="1"/>
+            <polygon points="0,-25 21.65,-12.5 21.65,12.5 0,25 -21.65,12.5 -21.65,-12.5" fill="none" stroke="currentColor" class="text-[var(--border)] opacity-20" stroke-width="1"/>
+
+            <!-- Axes -->
+            <line x1="0" y1="0" x2="0" y2="-100" stroke="currentColor" class="text-[var(--border)] opacity-40" stroke-width="1"/>
+            <line x1="0" y1="0" x2="86.6" y2="-50" stroke="currentColor" class="text-[var(--border)] opacity-40" stroke-width="1"/>
+            <line x1="0" y1="0" x2="86.6" y2="50" stroke="currentColor" class="text-[var(--border)] opacity-40" stroke-width="1"/>
+            <line x1="0" y1="0" x2="0" y2="100" stroke="currentColor" class="text-[var(--border)] opacity-40" stroke-width="1"/>
+            <line x1="0" y1="0" x2="-86.6" y2="50" stroke="currentColor" class="text-[var(--border)] opacity-40" stroke-width="1"/>
+            <line x1="0" y1="0" x2="-86.6" y2="-50" stroke="currentColor" class="text-[var(--border)] opacity-40" stroke-width="1"/>
+
+            <!-- Dynamic Polygon (CEFR C2 = 100 Benchmark) -->
+            <polygon id="radar-shape" class="radar-polygon fill-blue-500/25 stroke-blue-500" stroke-width="2.5"
+                     points="0,-58 52,-30 59,34 0,62 -56,33 -48,-28"/>
+
+            <!-- Labels -->
+            <text x="0" y="-108" text-anchor="middle" class="fill-[var(--muted-foreground)] text-[11px]">詞彙深度</text>
+            <text x="96" y="-52" text-anchor="start" class="fill-[var(--muted-foreground)] text-[11px]">文法結構</text>
+            <text x="96" y="55" text-anchor="start" class="fill-[var(--muted-foreground)] text-[11px]">語境推論</text>
+            <text x="0" y="115" text-anchor="middle" class="fill-[var(--muted-foreground)] text-[11px]">長篇耐力</text>
+            <text x="-96" y="55" text-anchor="end" class="fill-[var(--muted-foreground)] text-[11px]">細節查核</text>
+            <text x="-96" y="-52" text-anchor="end" class="fill-[var(--muted-foreground)] text-[11px]">答題配速</text>
+          </svg>
+        </div>
+
+        <div class="grid grid-cols-3 gap-2 pt-2 border-t border-[var(--border)] text-center text-xs">
+          <div><span class="text-[var(--muted-foreground)] block">核心維度 1</span><span class="font-bold text-emerald-500" id="radar-sub-1">語境推論: 68 / 100 (B2)</span></div>
+          <div><span class="text-[var(--muted-foreground)] block">核心維度 2</span><span class="font-bold text-blue-500" id="radar-sub-2">細節比對: 65 / 100 (B2)</span></div>
+          <div><span class="text-[var(--muted-foreground)] block">核心維度 3</span><span class="font-bold text-amber-500" id="radar-sub-3">詞性衍生: 58 / 100 (B1+)</span></div>
+        </div>
+      </div>
+
+      <!-- Right Column: Trend Chart & Section Breakdown (7 cols) -->
+      <div class="lg:col-span-7 space-y-6">
+
+        <!-- Trend Line Card -->
+        <div class="bg-[var(--card)] border border-[var(--border)] p-5 rounded-2xl shadow-sm">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h3 class="font-bold text-base" id="trend-title">歷次模擬測驗 / 實力推移走勢</h3>
+              <p class="text-xs text-[var(--muted-foreground)] mt-0.5" id="trend-desc">跨堂數追蹤整體預估總分與進步幅度</p>
+            </div>
+            <div class="flex items-center gap-3 text-xs" id="trend-legend-box">
+              <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span> 走勢軌跡</span>
+              <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> 最新落點</span>
+            </div>
+          </div>
+
+          <!-- Trend Chart SVG & Empty State Box -->
+          <div class="w-full h-44 relative" id="trend-box">
+            <!-- Empty / Pending State Overlay -->
+            <div id="trend-empty-overlay" class="absolute inset-0 flex flex-col items-center justify-center bg-[var(--card)]/95 backdrop-blur-[2px] rounded-xl z-20 hidden p-4 text-center border border-dashed border-[var(--border)]">
+              <span class="text-2xl mb-1" id="trend-empty-icon">📋</span>
+              <h4 class="font-bold text-xs text-[var(--foreground)]" id="trend-empty-title">會考模擬測驗尚未開測 · 目前排空中</h4>
+              <p class="text-[11px] text-[var(--muted-foreground)] mt-1 max-w-md leading-relaxed" id="trend-empty-text">目前聚焦文法單元重構，待 Figma 建立會考模擬檢討白板後即時統計。</p>
+            </div>
+            <svg class="w-full h-full overflow-visible" viewBox="0 0 500 150">
+              <!-- Y-Axis Guides -->
+              <line x1="40" y1="20" x2="490" y2="20" stroke="currentColor" class="text-[var(--border)]" stroke-dasharray="3,3"/>
+              <text x="30" y="24" text-anchor="end" class="fill-[var(--muted-foreground)] text-[10px]" id="y-label-1">800</text>
+              <line x1="40" y1="65" x2="490" y2="65" stroke="currentColor" class="text-[var(--border)]" stroke-dasharray="3,3"/>
+              <text x="30" y="69" text-anchor="end" class="fill-[var(--muted-foreground)] text-[10px]" id="y-label-2">750</text>
+              <line x1="40" y1="110" x2="490" y2="110" stroke="currentColor" class="text-[var(--border)]" stroke-dasharray="3,3"/>
+              <text x="30" y="114" text-anchor="end" class="fill-[var(--muted-foreground)] text-[10px]" id="y-label-3">700</text>
+
+              <!-- Lines & Areas -->
+              <path id="trend-area" d="M 60 76 L 190 63 L 320 70 L 450 61 L 450 140 L 60 140 Z" class="fill-blue-500/10"/>
+              <path id="trend-line" d="M 60 76 L 190 63 L 320 70 L 450 61" fill="none" stroke="#3b82f6" stroke-width="3" stroke-linecap="round"/>
+
+              <!-- Dots -->
+              <g id="trend-dots">
+                <circle cx="60" cy="76" r="4.5" fill="#3b82f6" stroke="white" stroke-width="2"/>
+                <circle cx="190" cy="63" r="4.5" fill="#3b82f6" stroke="white" stroke-width="2"/>
+                <circle cx="320" cy="70" r="4.5" fill="#3b82f6" stroke="white" stroke-width="2"/>
+                <circle cx="450" cy="61" r="6" fill="#10b981" stroke="white" stroke-width="2"/>
+              </g>
+
+              <!-- X-Axis Labels -->
+              <text x="60" y="145" text-anchor="middle" class="fill-[var(--muted-foreground)] text-[11px]" id="t-label-1">模擬第三回</text>
+              <text x="190" y="145" text-anchor="middle" class="fill-[var(--muted-foreground)] text-[11px]" id="t-label-2">模擬第四回</text>
+              <text x="320" y="145" text-anchor="middle" class="fill-[var(--muted-foreground)] text-[11px]" id="t-label-3">模擬第五回</text>
+              <text x="450" y="145" text-anchor="middle" class="fill-[var(--muted-foreground)] text-[11px] font-bold text-emerald-500" id="t-label-4">模擬第六回 (最新)</text>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Section Accuracy Bars -->
+        <div class="bg-[var(--card)] border border-[var(--border)] p-5 rounded-2xl shadow-sm">
+          <h3 class="font-bold text-base mb-3" id="parts-title">多益題型分項正確率掌握</h3>
+          <div class="space-y-3 text-xs" id="parts-bars">
+            <!-- Part 5 -->
+            <div>
+              <div class="flex justify-between mb-1">
+                <span>Part 5 單句填空（文法與詞性）</span>
+                <span class="font-bold text-blue-500" id="p5-val">76% (23/30)</span>
+              </div>
+              <div class="w-full bg-[var(--accent)] h-2 rounded-full overflow-hidden">
+                <div class="bg-blue-500 h-2 rounded-full" style="width: 76%" id="p5-bar"></div>
+              </div>
+            </div>
+            <!-- Part 6 -->
+            <div>
+              <div class="flex justify-between mb-1">
+                <span>Part 6 段落填空（語意銜接與預算）</span>
+                <span class="font-bold text-indigo-500" id="p6-val">87% (14/16)</span>
+              </div>
+              <div class="w-full bg-[var(--accent)] h-2 rounded-full overflow-hidden">
+                <div class="bg-indigo-500 h-2 rounded-full" style="width: 87%" id="p6-bar"></div>
+              </div>
+            </div>
+            <!-- Part 7 -->
+            <div>
+              <div class="flex justify-between mb-1">
+                <span>Part 7 篇章閱讀（多篇交叉比對與推論）</span>
+                <span class="font-bold text-emerald-500" id="p7-val">89% (48/54)</span>
+              </div>
+              <div class="w-full bg-[var(--accent)] h-2 rounded-full overflow-hidden">
+                <div class="bg-emerald-500 h-2 rounded-full" style="width: 89%" id="p7-bar"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Bottom: Weakness Tag Cloud & Action Plan -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+      <!-- Left: Weakness Heatmap & Mastery Tags -->
+      <div class="bg-[var(--card)] border border-[var(--border)] p-5 rounded-2xl shadow-sm">
+        <h3 class="font-bold text-base mb-2">白板劃記萃取：常見盲點熱力庫</h3>
+        <p class="text-xs text-[var(--muted-foreground)] mb-4">系統自動統計在各白板反覆訂正的詞彙與文法概念</p>
+
+        <div class="space-y-3" id="weakness-container">
+          <div>
+            <span class="text-xs font-semibold text-rose-500 flex items-center gap-1.5 mb-2">
+              <span class="w-2 h-2 rounded-full bg-rose-500"></span> 優先突破弱項 (需針對性加強)
+            </span>
+            <div class="flex flex-wrap gap-2 text-xs" id="tags-weak">
+              <span class="px-2.5 py-1 rounded-lg bg-rose-500/10 text-rose-500 border border-rose-500/20 font-medium">⚠️ 家族字衍生 (specific / specify) · 3次</span>
+              <span class="px-2.5 py-1 rounded-lg bg-rose-500/10 text-rose-500 border border-rose-500/20 font-medium">⚠️ expenditures / expendable 名詞辨析 · 2次</span>
+              <span class="px-2.5 py-1 rounded-lg bg-rose-500/10 text-rose-500 border border-rose-500/20 font-medium">⚠️ 閱讀細節常識干擾 (book a table) · 2次</span>
+            </div>
+          </div>
+
+          <div class="pt-2 border-t border-[var(--border)]">
+            <span class="text-xs font-semibold text-emerald-500 flex items-center gap-1.5 mb-2">
+              <span class="w-2 h-2 rounded-full bg-emerald-500"></span> 已穩固掌握概念 (答對率 > 90%)
+            </span>
+            <div class="flex flex-wrap gap-2 text-xs" id="tags-strong">
+              <span class="px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 font-medium">✅ regarding 介系詞群組</span>
+              <span class="px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 font-medium">✅ 境外事故句子插入定位</span>
+              <span class="px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 font-medium">✅ 跨篇章發票折扣數字核對</span>
+              <span class="px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 font-medium">✅ 線上對話弦外之音推導</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Actionable Milestones & Export Tools -->
+      <div class="bg-[var(--card)] border border-[var(--border)] p-5 rounded-2xl shadow-sm flex flex-col justify-between">
+        <div>
+          <h3 class="font-bold text-base mb-2">下階段突破焦點與學習建議</h3>
+          <p class="text-xs text-[var(--muted-foreground)] mb-4">基於最新白板數據產生的自習目標</p>
+
+          <ul class="space-y-2.5 text-xs" id="recommendations-list">
+            <li class="flex items-start gap-2">
+              <span class="w-4 h-4 rounded-full bg-blue-500/20 text-blue-500 flex items-center justify-center shrink-0 mt-0.5 font-bold">1</span>
+              <span><strong>Part 5 答題骨幹拆解：</strong>遇到長句填空先圈主詞與動詞，直接排除干擾詞性，目標單題壓縮至 25 秒內。</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="w-4 h-4 rounded-full bg-blue-500/20 text-blue-500 flex items-center justify-center shrink-0 mt-0.5 font-bold">2</span>
+              <span><strong>第六回作業計時練習：</strong>本次閱讀題目維持良好比對習慣，建議整回完整計時 75 分鐘不中斷，模擬實戰配速。</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="w-4 h-4 rounded-full bg-blue-500/20 text-blue-500 flex items-center justify-center shrink-0 mt-0.5 font-bold">3</span>
+              <span><strong>高頻字卡刷讀：</strong>複習白板上標註的 <code>regarding</code>、<code>cater</code>、<code>budget</code> 等一字多義生字。</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Quick Action Buttons -->
+        <div class="pt-4 border-t border-[var(--border)] mt-4 flex items-center gap-3">
+          <button onclick="copyParentReport()" class="flex-1 py-2 px-3 text-xs font-semibold rounded-xl bg-blue-600 hover:bg-blue-700 text-white transition flex items-center justify-center gap-1.5 shadow-sm">
+            <span>📱 一鍵生成家長進度週報 (LINE 格式)</span>
+          </button>
+          <button onclick="alert('已為您更新該學生 Notion 成長檔案紀錄！')" class="py-2 px-3 text-xs font-semibold rounded-xl bg-[var(--accent)] hover:bg-[var(--border)] text-[var(--foreground)] transition">
+            同步回 Notion
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Parent Report Preview / Copy Modal -->
+  <div id="parent-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-[var(--card)] border border-[var(--border)] rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-[var(--border)]">
+        <div class="flex items-center gap-2.5">
+          <span class="text-2xl">📱</span>
+          <div>
+            <h3 class="font-bold text-base" id="modal-student-title">家長課後進度週報 (LINE 格式)</h3>
+            <p class="text-xs text-[var(--muted-foreground)]">可檢視、微調或直接複製發送給家長</p>
+          </div>
+        </div>
+        <button onclick="closeParentModal()" class="w-8 h-8 rounded-lg hover:bg-[var(--accent)] text-[var(--muted-foreground)] hover:text-[var(--foreground)] flex items-center justify-center text-lg transition">✕</button>
+      </div>
+
+      <div>
+        <label class="block text-xs font-semibold text-[var(--muted-foreground)] mb-1.5">週報內容（已排版完成）</label>
+        <textarea id="modal-report-text" rows="7" class="w-full text-xs p-3.5 rounded-xl bg-[var(--accent)] text-[var(--foreground)] border border-[var(--border)] focus:outline-none focus:ring-2 focus:ring-blue-500 leading-relaxed resize-none"></textarea>
+      </div>
+
+      <div id="modal-copy-status" class="text-xs font-medium text-emerald-500 flex items-center gap-1.5">
+        ✅ 已自動複製到剪貼簿，可直接至 LINE 貼上！
+      </div>
+
+      <div class="flex items-center justify-between pt-2 border-t border-[var(--border)]">
+        <span class="text-[11px] text-[var(--muted-foreground)]">若剪貼簿受瀏覽器限制，可選取框內文字複製</span>
+        <div class="flex items-center gap-2">
+          <button onclick="closeParentModal()" class="px-3.5 py-2 text-xs font-medium rounded-xl hover:bg-[var(--accent)] text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition">
+            關閉
+          </button>
+          <button onclick="performCopy()" class="px-4 py-2 text-xs font-semibold rounded-xl bg-blue-600 hover:bg-blue-700 text-white transition flex items-center gap-1.5 shadow-sm">
+            <span>📋 再次複製</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification Toast -->
+  <div id="toast" class="fixed bottom-6 right-6 bg-slate-900 text-white px-4 py-2.5 rounded-xl shadow-2xl text-xs font-medium opacity-0 transition-opacity pointer-events-none z-50">
+    已複製家長週報至剪貼簿！
+  </div>
+
+  <script>
+    const studentData = {
+  "enxin": {
+    "name": "恩忻",
+    "type": "多益公開測驗衝刺 (Figma 實測模擬導向)",
+    "target": "多益 850+ 藍金證書 (CEFR B2~C1)",
+    "targetSub": "評估依據：100% 依據 Figma 歷次白板實測批改狀態",
+    "score": "760 分 (實測區間 720~765)",
+    "scoreSub": "多益小模擬第3~6回盤整築底 (CEFR B1+~B2)",
+    "notes": "544 筆筆跡 / 多益小模擬3~6回",
+    "notesSub": "直接萃取白板圈選、訂正與批改痕跡",
+    "hw": "100%",
+    "hwSub": "10月 Notion 繳交率 100% · 白板小模擬檢討掌握度 95%",
+    "radarPoints": "0,-58 52,-30 59,34 0,62 -56,33 -48,-28",
+    "radarScores": [
+      "語境推論: 68 / 100 (B2)",
+      "細節比對: 65 / 100 (B2)",
+      "詞性衍生: 58 / 100 (B1+)"
+    ],
+    "partsTitle": "多益小模擬題型掌握度（新制多益練武功）",
+    "parts": [
+      {
+        "name": "Part 5 單句填空（文法與詞性衍生）",
+        "val": "74% (常考衍生詞/介系詞辨析)",
+        "width": "74%",
+        "color": "bg-blue-500",
+        "textCol": "text-blue-500"
+      },
+      {
+        "name": "Part 6 段落填空（語意銜接與上下文脈絡）",
+        "val": "82% (轉折詞與插入句穩健)",
+        "width": "82%",
+        "color": "bg-indigo-500",
+        "textCol": "text-indigo-500"
+      },
+      {
+        "name": "Part 7 篇章閱讀（多篇交叉比對與推論）",
+        "val": "88% (發票/對話弦外之音敏銳)",
+        "width": "88%",
+        "color": "bg-emerald-500",
+        "textCol": "text-emerald-500"
+      }
+    ],
+    "weakTags": [
+      "⚠️ 家族字衍生 (specific / specify) 詞性混淆 · 3次",
+      "⚠️ expenditures / expendable 名詞與形容詞辨析 · 2次",
+      "⚠️ 題目長句主被動主詞定位陷阱 · 2次"
+    ],
+    "strongTags": [
+      "✅ regarding 介系詞群組",
+      "✅ 線上對話弦外之音推導 (He is busy)",
+      "✅ 跨篇章發票與折扣細節交叉核對",
+      "✅ 長篇閱讀主旨抓取敏銳"
+    ],
+    "recs": [
+      "<strong>Part 5 答題骨幹拆解：</strong>遇到長句填空先圈主詞與動詞，直接排除干擾詞性，目標單題壓縮至 25 秒內。",
+      "<strong>小模擬測驗持續練配速：</strong>第 5~6 回閱讀比對掌握佳，繼續維持整回計時作答，強化做題節奏穩定度。",
+      "<strong>高頻字卡刷讀：</strong>複習白板上標註的 regarding、cater、budget 等一字多義與家族字衍生變化。"
+    ],
+    "trendTitle": "多益小模擬測驗 / 實力推移走勢",
+    "trendDesc": "依據【新制多益練武功】Day 3~6 白板實測批改與題型正答率判定",
+    "trendEmpty": false,
+    "trendLabels": [
+      "模擬第三回",
+      "模擬第四回",
+      "模擬第五回",
+      "模擬第六回 (最新)"
+    ],
+    "trendY": [
+      "800",
+      "750",
+      "700"
+    ],
+    "trendPoints": [
+      {
+        "x": 60,
+        "y": 76,
+        "score": "725分"
+      },
+      {
+        "x": 190,
+        "y": 63,
+        "score": "755分"
+      },
+      {
+        "x": 320,
+        "y": 70,
+        "score": "740分"
+      },
+      {
+        "x": 450,
+        "y": 61,
+        "score": "760分"
+      }
+    ],
+    "parentMsg": "恩忻媽媽您好！今天課堂帶恩忻檢討多益最新模擬試題。恩忻在 Part 7 長篇閱讀理解力非常強，能精準捕捉對話弦外之音與跨篇細節；目前整體分數在 720~765 分區間穩健築底盤整。我們持續針對 Part 5 的家族衍生字與詞性辨析加強突破，一步一腳印朝 850 藍金證書穩健邁進！",
+    "hwStatus": "優良"
+  },
+  "yuying": {
+    "name": "育穎",
+    "type": "多益實戰 (基礎扎根衝 600+)",
+    "target": "多益 550~600+ 綠色證書 (CEFR B1)",
+    "targetSub": "當前重點：多益小模擬練習 + 白板單字複習作業精熟",
+    "score": "510 分 (實測區間 480~530)",
+    "scoreSub": "多益小模擬第一、二回基礎扎根盤整 (A2跨B1)",
+    "notes": "320 筆筆跡 / 多益模擬測驗",
+    "notesSub": "依 Figma 模擬試題圈記與單字批改判定",
+    "hw": "100%",
+    "hwSub": "10月 Notion 繳交率 100% · 白板單字檢討優良",
+    "radarPoints": "0,-36 30,-17 33,19 0,30 -35,20 -24,-14",
+    "radarScores": [
+      "細節查核: 40 / 100 (B1)",
+      "語境推論: 38 / 100 (A2+)",
+      "答題配速: 28 / 100 (A2)"
+    ],
+    "partsTitle": "多益基礎模擬題型掌握度",
+    "parts": [
+      {
+        "name": "Part 5 單句填空（基礎詞性與時態）",
+        "val": "58% (核心形容詞/比較級鞏固中)",
+        "width": "58%",
+        "color": "bg-blue-500",
+        "textCol": "text-blue-500"
+      },
+      {
+        "name": "Part 6 段落填空（基礎句意銜接）",
+        "val": "64% (前後文轉折理解可)",
+        "width": "64%",
+        "color": "bg-indigo-500",
+        "textCol": "text-indigo-500"
+      },
+      {
+        "name": "Part 7 篇章閱讀（單篇生活情境）",
+        "val": "68% (表格與通知公告細節)",
+        "width": "68%",
+        "color": "bg-emerald-500",
+        "textCol": "text-emerald-500"
+      }
+    ],
+    "weakTags": [
+      "⚠️ 基礎名詞/形容詞/副詞詞性辨析 · 4次",
+      "⚠️ 動詞時態（完成式與特殊動詞）· 3次",
+      "⚠️ 多益商業高頻單字記憶延遲 · 2次"
+    ],
+    "strongTags": [
+      "✅ 日常行程與生活情境短文主旨",
+      "✅ 簡易表格與公告日期數字定位",
+      "✅ 白板單字複習作業繳交配合度高"
+    ],
+    "recs": [
+      "<strong>單字字卡每日定量複習：</strong>持續背誦多益 10000 單基礎核心單字，建立反射記憶。",
+      "<strong>Part 5 基礎詞性口訣：</strong>看到空格前後先判斷詞性（名詞前放形容詞、修飾動詞用副詞），逐步提升答對率。",
+      "<strong>小模擬整回計時：</strong>在白板練習時逐步習慣計時作答，減輕時間壓力造成的答題焦慮。"
+    ],
+    "trendTitle": "多益基礎模擬 / 實力推移走勢",
+    "trendDesc": "依據多益小模擬第一、二回實測與單字文法盤整，呈現真實打底曲線",
+    "trendEmpty": false,
+    "trendLabels": [
+      "模擬第一回(基礎試測)",
+      "單字文法盤整",
+      "模擬第二回(小模擬)",
+      "當前實力落點"
+    ],
+    "trendY": [
+      "600分",
+      "520分",
+      "450分"
+    ],
+    "trendPoints": [
+      {
+        "x": 60,
+        "y": 102,
+        "score": "485分"
+      },
+      {
+        "x": 190,
+        "y": 78,
+        "score": "510分"
+      },
+      {
+        "x": 320,
+        "y": 92,
+        "score": "495分"
+      },
+      {
+        "x": 450,
+        "y": 70,
+        "score": "520分"
+      }
+    ],
+    "parentMsg": "育穎媽媽您好！育穎目前多益基礎扎根非常踏實。在多益模擬試題與單字複習中，單篇生活文章與表格比對掌握良好；面對較複雜的詞性變化與商業字彙，目前在 480~530 分區間穩健盤整打底。我們會持續落實單字卡複習與基礎句型拆解，穩步向 550~600 綠色證書邁進！",
+    "hwStatus": "優良"
+  },
+  "zien": {
+    "name": "子恩",
+    "type": "雅思學術組 (跨學科教材精讀打底期)",
+    "target": "雅思長期目標 Band 7.0+ (CEFR C1 留學申請)",
+    "targetSub": "當前進度：跨學科長難句打底，待 Figma 建立作業檢討白板",
+    "score": "教材掌握度 88%",
+    "scoreSub": "神經科學與推力理論精讀完成度 (+2% 提升)",
+    "notes": "320 筆筆跡 / 雅思跨領域專題",
+    "notesSub": "NAD+ 與神經生化長難句拆解確實",
+    "hw": "100%",
+    "hwSub": "10月 Notion 繳交率 100% (1/1項) · 跨學科精讀掌握度 90%",
+    "radarPoints": "0,-68 56,-32 61,35 0,66 -56,33 -47,-27",
+    "radarScores": [
+      "語境推論: 71 / 100 (B2+)",
+      "學術字彙: 69 / 100 (B2)",
+      "模考配速: 55 / 100 (B1+)"
+    ],
+    "partsTitle": "雅思七大跨學科閱讀教材掌握進度",
+    "parts": [
+      {
+        "name": "社會科學與心理學（Nudge Theory 推力理論）",
+        "val": "92% (已完成精讀與字彙萃取)",
+        "width": "92%",
+        "color": "bg-emerald-500",
+        "textCol": "text-emerald-500"
+      },
+      {
+        "name": "生命科學與神經科學（NAD+ & Neuroplasticity）",
+        "val": "進度中 (生化名詞與長難句拆解)",
+        "width": "48%",
+        "color": "bg-blue-500",
+        "textCol": "text-blue-500"
+      },
+      {
+        "name": "基礎寫作段落造句（Task 1/2 論點連貫 Cohesion）",
+        "val": "76% (句子骨幹與文法扎根)",
+        "width": "76%",
+        "color": "bg-indigo-500",
+        "textCol": "text-indigo-500"
+      }
+    ],
+    "weakTags": [
+      "⚠️ 寫作中式思維與連接詞 (In the other hand ➔ On the other hand)",
+      "⚠️ 複合句型 (Subordination / While從屬子句) 自動化產出能力",
+      "⚠️ 抽象法政/治理專用詞彙庫 (judicial discretion, oversight, robust)"
+    ],
+    "strongTags": [
+      "✅ 核心學術詞彙 (inevitable, leverage, essential) 語境運用精準",
+      "✅ 寫作主動尋求多樣替換詞意識強烈 (it / digital tools / connectivity)",
+      "✅ 心理與神經科學篇章邏輯因果抓取敏銳",
+      "✅ 單字複習作業 100% 準時繳交且態度積極"
+    ],
+    "recs": [
+      "<strong>學術寫作複句升級：</strong>突破 Simple Sentences 堆疊，熟練使用 While / Although 從屬子句建立對比論點。",
+      "<strong>高頻學術搭配詞固化：</strong>將今日補充的 robust framework, judicial discretion, grapple with 納入複習卡。",
+      "<strong>動詞精準替換：</strong>以 render + adj. 替代 make + adj.，大幅提升 Task 2 Lexical Resource (Band 7.0+)。"
+    ],
+    "trendTitle": "教材閱讀與課後作業檢討走勢",
+    "trendDesc": "以跨學科教材精讀為依據；待 Figma 作業檢討白板建立後啟動全量追蹤",
+    "trendEmpty": false,
+    "trendLabels": [
+      "Nudge Theory精讀",
+      "AWL學術字彙打底",
+      "NAD+篇章精讀",
+      "作業檢討(待開)"
+    ],
+    "trendY": [
+      "精熟(90%+)",
+      "掌握(75%+)",
+      "打底(60%+)"
+    ],
+    "trendPoints": [
+      {
+        "x": 60,
+        "y": 48,
+        "score": "92%"
+      },
+      {
+        "x": 190,
+        "y": 65,
+        "score": "85%"
+      },
+      {
+        "x": 320,
+        "y": 78,
+        "score": "80%"
+      },
+      {
+        "x": 450,
+        "y": 70,
+        "score": "待檢討"
+      }
+    ],
+    "parentMsg": "子恩媽媽您好！今天課堂深入精讀雅思生命科學領域專題《神經可塑性的代謝引擎：NAD+ 與認知優化》，重點帶子恩拆解生化長難句、字源構詞與大作文因果轉折詞。子恩在學術長句結構的抓取越來越敏銳，10月份指派作業已 100% 按時完成核銷，學習態度非常自律扎實！",
+    "hwStatus": "優良",
+    "studentKey": "zien"
+  },
+  "bowen": {
+    "name": "柏文",
+    "type": "英檢中級雙合格 ➔ 會考 A++ 滿級分",
+    "target": "全民英檢中級四項合格 (CEFR B1+) ➔ 會考 A++ 滿級分",
+    "targetSub": "已正式取得中級英檢證書（初試 172分 ＋ 複試雙過），具高中畢業 / CEFR B1+ 水準",
+    "score": "中級初試 172 分 · 複試全合格",
+    "scoreSub": "初試：聽84 / 讀88 (門檻160) · 複試：寫82 / 說80 (門檻80)",
+    "notes": "中級四項全過標 / 會考文法講義",
+    "notesSub": "聽說讀寫四項全過標 · 國中會考降維打擊直指滿級分",
+    "hw": "100%",
+    "hwSub": "10月 Notion 繳交率 100% · 白板文法演練精熟",
+    "radarPoints": "0,-60 48,-28 48,28 0,57 -48,28 -50,-29",
+    "radarScores": [
+      "文法結構: 60 / 100 (B1+~B2)",
+      "詞彙深度: 56 / 100 (B1+)",
+      "聽力理解: 58 / 100 (B1+)"
+    ],
+    "partsTitle": "全民英檢中級實測成績單（略高於通過門檻）",
+    "parts": [
+      {
+        "name": "中級初試：聽力測驗（通過門檻 72 / 滿分 120）",
+        "val": "84 分 (超越門檻 12 分 · 廣播與長對話敏銳)",
+        "width": "70%",
+        "color": "bg-emerald-500",
+        "textCol": "text-emerald-500"
+      },
+      {
+        "name": "中級初試：閱讀測驗（通過門檻 72 / 滿分 120）",
+        "val": "88 分 (超越門檻 16 分 · 初試總分 172/240)",
+        "width": "73%",
+        "color": "bg-blue-500",
+        "textCol": "text-blue-500"
+      },
+      {
+        "name": "中級複試：寫作測驗（通過門檻 80 / 滿分 100）",
+        "val": "82 分 (合格 · 中譯英與段落架構組織嚴密)",
+        "width": "82%",
+        "color": "bg-indigo-500",
+        "textCol": "text-indigo-500"
+      },
+      {
+        "name": "中級複試：口說測驗（通過門檻 80 / 滿分 100）",
+        "val": "80 分 (合格 · 回答完整、發音抑揚頓挫流暢)",
+        "width": "80%",
+        "color": "bg-purple-500",
+        "textCol": "text-purple-500"
+      },
+      {
+        "name": "會考 16 單元全文法精熟進度",
+        "val": "6/16 單元 (以高中級實力降維打擊會考題)",
+        "width": "65%",
+        "color": "bg-amber-500",
+        "textCol": "text-amber-500"
+      }
+    ],
+    "weakTags": [
+      "⚠️ 複試寫作高階句型（分詞構句、倒裝句）修飾可再強化",
+      "⚠️ 複合關係代名詞 (what vs. which) 易混淆考點",
+      "⚠️ 過去完成式在長篇複合句中之時間前後定位"
+    ],
+    "strongTags": [
+      "✅ 全民英檢中級（初試＋複試四項）合格認證取得",
+      "✅ 具備 CEFR B1+ / 高中畢業程度之英文實戰力",
+      "✅ 八大時態互動測驗滿分精熟（主動語態扎實）",
+      "✅ 會考聽力與閱讀理解穩定度高，會考 A++ 穩固"
+    ],
+    "recs": [
+      "<strong>英檢中級全過，會考降維打擊：</strong>國中即通過全民英檢中級初試與複試（具 CEFR B1+ 高中水準），面對國中會考英文（A2~B1）具備絕對壓制力，目標鎖定會考 A++ 滿級分（容錯率極高）。",
+      "<strong>文法體系穩健收尾：</strong>持續完成國中會考 Unit 7~16 文法講義，並結合英檢思維加強進階被動語態與關係代名詞。",
+      "<strong>長篇克漏字保持題感：</strong>運用 Google Drive 專屬題庫《閱讀_克漏字》系列，維持細節核對敏銳度，確保大考零失誤。"
+    ],
+    "trendTitle": "全民英檢中級實測成績走勢",
+    "trendDesc": "依據中級英檢初試（聽力、閱讀）與複試（寫作、口說）合格分數繪製，穩定過標",
+    "trendEmpty": false,
+    "trendLabels": [
+      "初試聽力 (84分)",
+      "初試閱讀 (88分)",
+      "複試寫作 (82分)",
+      "複試口說 (80分)"
+    ],
+    "trendY": [
+      "特優(90+)",
+      "通過門檻(及格)",
+      "基礎(60+)"
+    ],
+    "trendPoints": [
+      {
+        "x": 60,
+        "y": 68,
+        "score": "84分"
+      },
+      {
+        "x": 190,
+        "y": 60,
+        "score": "88分"
+      },
+      {
+        "x": 320,
+        "y": 72,
+        "score": "82分"
+      },
+      {
+        "x": 450,
+        "y": 76,
+        "score": "80分"
+      }
+    ],
+    "parentMsg": "柏文媽媽您好！非常高興向您分享好消息：柏文已順利通過「全民英檢中級」初試與複試（初試總分 172 分：聽力 84、閱讀 88，超越 160 分門檻；複試寫作 82、口說 80 雙雙合格）！國中生能取得英檢中級證書（相當於高中畢業水準）極為不易，這代表柏文的英文聽說讀寫實力已遠超國中會考範疇，面對會考英文將形成全方位的降維優勢。目前我們穩健推進最後的文法體系重構，目標直指會考 A++ 滿級分！",
+    "hwStatus": "優良"
+  },
+  "weiyu": {
+    "name": "惟羽",
+    "type": "國中教育會考 穩 A+ 衝 A++",
+    "target": "115 年國中教育會考 英文 A+ 穩健衝 A++ (CEFR B1)",
+    "targetSub": "當前重點：課後複習作業落實與觀念打底 (尚未進入模考)",
+    "score": "全文法複習中：進度 12/16 單元",
+    "scoreSub": "最新進度：Unit 12 連接詞完成 (進度 75%) · 下一單元：Unit 13 名詞子句",
+    "notes": "468 筆筆跡 / 課堂白板",
+    "notesSub": "今日檢視 3 份白板：Unit 12 連結詞、Unit 1 名詞複習、06/01單字檢討",
+    "hw": "100%",
+    "hwSub": "10月 Notion 繳交率 100% · 白板作業掌握度 88%",
+    "radarPoints": "0,-44 40,-23 36,21 0,38 -36,21 -35,-20",
+    "radarScores": [
+      "文法結構: 44 / 100 (B1)",
+      "詞彙掌握: 46 / 100 (B1)",
+      "語境推論: 42 / 100 (B1)",
+      "長篇耐力: 38 / 100 (A2+)"
+    ],
+    "partsTitle": "全文法體系重構進度與課後複習掌握度",
+    "parts": [
+      {
+        "name": "國中全文法重構進度（Unit 1~12 / 16 單元）",
+        "val": "75% (Unit 12 連接詞完成，銜接 Unit 13)",
+        "width": "75%",
+        "color": "bg-blue-500",
+        "textCol": "text-blue-500"
+      },
+      {
+        "name": "B1~B4 核心單字庫與搭配詞抽測",
+        "val": "90% (今日抽測 presence / passenger 正確掌握)",
+        "width": "90%",
+        "color": "bg-emerald-500",
+        "textCol": "text-emerald-500"
+      },
+      {
+        "name": "副詞子句現在代未來與祈使句雙刀流",
+        "val": "85% (現在代未來觀念確立，祈使句and/or反應敏銳)",
+        "width": "85%",
+        "color": "bg-indigo-500",
+        "textCol": "text-indigo-500"
+      }
+    ],
+    "weakTags": [
+      "⚠️ 條件/時間副詞子句未來式干擾 (will rain ➔ rains) · 2次",
+      "⚠️ 雙重連接詞中文直譯習慣 (Because...so...連用) · 2次",
+      "⚠️ 祈使句接 and/or 語意轉折 (那麼 vs 否則) · 1次"
+    ],
+    "strongTags": [
+      "✅ Unit 12 對等連接詞平行結構掌握優良",
+      "✅ 單字庫複習扎實 (今日抽測精準吸收)",
+      "✅ 白板筆記整理清晰有條理"
+    ],
+    "recs": [
+      "<strong>副詞子句時態刻意練習：</strong>遇到 if、when、as soon as、before 等時間與條件副詞子句，先在子句上方標註『現在代未來』，避免習慣性填入 will。",
+      "<strong>祈使句 and / or 雙刀流速判：</strong>閱讀題目時先看後方是順利正向結果（選 and）還是警示威脅結果（選 or），1 秒破解題目。",
+      "<strong>錯題本螺旋式間隔重測：</strong>針對雙重連接詞（Because... so... / Although... but...）進行對比糾錯，杜絕中文直譯習慣。"
+    ],
+    "trendTitle": "課後複習作業檢討走勢 (排空中)",
+    "trendDesc": "惟羽尚未進入會考模擬階段，走勢圖目前先排空；待 Figma 開立複習作業檢討白板後即時統計更新",
+    "trendEmpty": true,
+    "trendLabels": [
+      "複習作業 1 (待開)",
+      "複習作業 2",
+      "複習作業 3",
+      "複習作業 4"
+    ],
+    "trendY": [
+      "優良",
+      "掌握",
+      "扎根"
+    ],
+    "trendPoints": [
+      {
+        "x": 60,
+        "y": 75
+      },
+      {
+        "x": 190,
+        "y": 75
+      },
+      {
+        "x": 320,
+        "y": 75
+      },
+      {
+        "x": 450,
+        "y": 75
+      }
+    ],
+    "parentMsg": "惟羽媽媽您好！惟羽今天課堂表現非常優秀，順利完成了《文法AED》Unit 12【連結詞】的全套核心題型與觀念建立，國中全文法重構進度已推進至 12/16 單元（完成率 75%）！課堂單字抽測 presence 與 passenger 掌握度達 90% 以上。今天也同時複習了 Unit 1 名詞可數不可數概念。本週全套三格式作業（Word、PDF、手機版預覽圖與閱讀篇章全文朗讀音檔）已全數生成至 Google Drive 學生資料夾中，我們將持續穩步打底衝刺會考 A+！",
+    "hwStatus": "優良",
+    "trendEmptyIcon": "📝",
+    "trendEmptyTitle": "課後複習作業檢討尚未開測 · 目前排空中",
+    "trendEmptyText": "惟羽目前尚未進入會考模擬階段；待老師在 Figma 開立專屬複習作業檢討白板後，系統將依據檢討成效即時統計並繪製最新實力曲線！"
+  },
+  "junfu": {
+    "name": "鈞富",
+    "type": "國中教育會考 基礎扎根直升 A",
+    "target": "國中教育會考 英文科 A 級 (CEFR A2跨B1)",
+    "targetSub": "當前重點：國中文法體系重構 (進度 13/16 單元，已攻克 U13 名詞子句)",
+    "score": "進度 13/16 單元 (81%)",
+    "scoreSub": "依 Figma 白板進度：已攻克 Unit 13 名詞子句，銜接 Unit 14 形容詞子句",
+    "notes": "510 筆筆跡 / 文法 AED 歷次單元",
+    "notesSub": "Figma 白板已攻克 U10~U13，銜接 U14 形容詞子句",
+    "hw": "100%",
+    "hwSub": "10月 Notion 繳交率 100% (2/2項) · 白板文法檢討優良",
+    "radarPoints": "0,-32 31,-18 26,15 0,26 -28,16 -24,-14",
+    "radarScores": [
+      "名詞子句: 36 / 100 (A2+)",
+      "詞彙三態: 32 / 100 (A2)",
+      "長篇耐力: 26 / 100 (A2)"
+    ],
+    "partsTitle": "國中文法 16 單元體系重建進度 (13/16 單元)",
+    "parts": [
+      {
+        "name": "基礎核心時態與動詞（Unit 1~8 時態與特殊動詞）",
+        "val": "100% 精熟 (8/8 單元完封)",
+        "width": "100%",
+        "color": "bg-emerald-500",
+        "textCol": "text-emerald-500"
+      },
+      {
+        "name": "進階動詞與連接詞（Unit 9~12 被動、不定詞與連接詞）",
+        "val": "100% 掌握 (4/4 單元完封)",
+        "width": "100%",
+        "color": "bg-blue-500",
+        "textCol": "text-blue-500"
+      },
+      {
+        "name": "高階子句結構（Unit 13~16 名詞子句完，攻堅 U14 關代）",
+        "val": "進度 1/4 單元 (U13 完封，銜接 U14)",
+        "width": "25%",
+        "color": "bg-indigo-500",
+        "textCol": "text-indigo-500"
+      }
+    ],
+    "weakTags": [
+      "⚠️ 過去式轉間接問句去掉 did 後動詞忘記改回過去式 · 3次",
+      "⚠️ whether vs if 盲點（緊鄰 or not、介係詞後僅限 whether）· 2次",
+      "⚠️ 關係代名詞先行詞格位與主格受格判別（U14 預習）"
+    ],
+    "strongTags": [
+      "✅ Unit 13 名詞子句 that 省略與直述語序掌握優異",
+      "✅ 疑問詞本身即主詞的間接問句特殊題反應迅速",
+      "✅ 被動語態全時態變化與連接詞判斷精確",
+      "✅ 閱讀翻譯長句結構擷取能力提升"
+    ],
+    "recs": [
+      "<strong>間接問句時態還原：</strong>牢記去掉 did 之後主要動詞務必還原為「過去式」，避免漏掉時態變換。",
+      "<strong>攻堅 Unit 14 形容詞子句：</strong>接續 Figma 最新白板展開關係代名詞 (who/which/that) 先行詞格位判定。",
+      "<strong>文法完備後啟動會考卷：</strong>16 單元文法全面收尾後，於 Figma 開立會考全真模擬卷進行實測追蹤。"
+    ],
+    "trendTitle": "會考全真模擬測驗走勢 (尚未開測 / 排空中)",
+    "trendDesc": "目前處於 16 單元全文法重構階段 (進度 13/16)，尚未開測會考卷；待 Figma 建立會考卷檢討白板後即時統計",
+    "trendEmpty": true,
+    "trendEmptyIcon": "📋",
+    "trendEmptyTitle": "會考模擬測驗尚未開測 · 目前排空中",
+    "trendEmptyText": "鈞富目前正穩健進行國中文法體系扎根（依據 Figma 白板最新進度已完封 Unit 13 名詞子句，進度 13/16 單元）；待文法體系完整構建並於 Figma 白板開立會考全真模擬卷檢討後，系統將即時統計並繪製實力曲線！",
+    "trendLabels": [
+      "會考模考 1 (待開測)",
+      "會考模考 2",
+      "會考模考 3",
+      "會考模考 4"
+    ],
+    "trendY": [
+      "A級",
+      "B++",
+      "B+"
+    ],
+    "trendPoints": [
+      {
+        "x": 60,
+        "y": 80
+      },
+      {
+        "x": 190,
+        "y": 80
+      },
+      {
+        "x": 320,
+        "y": 80
+      },
+      {
+        "x": 450,
+        "y": 80
+      }
+    ],
+    "parentMsg": "鈞富媽媽您好！依據 Figma 白板最新課堂進度，鈞富已順利攻克《文法AED》第 13 單元【名詞子句】，國中文法重構進度已達到 13/16 單元（約 81%）！鈞富在間接問句語序與 that 子句的掌握度非常優異，目前正銜接第 14 單元【形容詞子句 / 關係代名詞】。目前尚未進入會考模擬測驗階段；待 16 單元文法打底完成後，我們將正式開啟會考模擬卷練習，帶領鈞富穩步突破 B 級瓶頸、直升 A 級！",
+    "hwStatus": "優良"
+  },
+  "joseph": {
+    "name": "Joseph",
+    "type": "高中英文 (龍騰B3 U1-U3 段考衝刺)",
+    "target": "高二第一次段考頂標 (90+ 分, CEFR B1+~B2)",
+    "targetSub": "細緻分類：學習/練習 + 作業檢討 + 學校段考成績走勢",
+    "score": "預估 86~89 分",
+    "scoreSub": "綜合學習練習(89%) + 作業檢討(82%) + 課堂小考預估",
+    "notes": "4 份白板 (學習2份 + 作業2份)",
+    "notesSub": "標題無「作業」=課堂學習練習；有「作業」=作業檢討",
+    "hw": "50%",
+    "hwSub": "10月 Notion 繳交率 50% (1/2項已勾) · 白板作業掌握度 82%",
+    "radarPoints": "0,-56 45,-26 48,28 0,52 -40,23 -43,-25",
+    "radarScores": [
+      "核心單字: 56 / 100 (B1+)",
+      "長篇推論: 55 / 100 (B1+)",
+      "手寫細節: 46 / 100 (B1)"
+    ],
+    "partsTitle": "Joseph 高中段考三大核心評估向度",
+    "parts": [
+      {
+        "name": "📘 課堂學習與練習 (L1/L3 課文與文法)",
+        "val": "89% (長篇神話敘事與虛受詞掌握佳)",
+        "width": "89%",
+        "color": "bg-emerald-500",
+        "textCol": "text-emerald-500"
+      },
+      {
+        "name": "📝 作業檢討狀況 (0926單字 + L1演練)",
+        "val": "82% (分詞構句主被動與中翻英細節)",
+        "width": "82%",
+        "color": "bg-blue-500",
+        "textCol": "text-blue-500"
+      },
+      {
+        "name": "🏫 學校課堂小考成績 (課程管理區連動)",
+        "val": "待老師回填 (自動帶入綜合權重)",
+        "width": "65%",
+        "color": "bg-indigo-500",
+        "textCol": "text-indigo-500"
+      }
+    ],
+    "weakTags": [
+      "⚠️ 分詞構句 (V-ing / p.p.) 主動被動判斷 (L1作業)",
+      "⚠️ Not until 句首倒裝助動詞還原原形動詞 (L3課堂)",
+      "⚠️ 中翻英字詞搭配漏冠詞與名詞單複數"
+    ],
+    "strongTags": [
+      "✅ 虛受詞 it (S + consider it adj. to Vr) 真受詞定位",
+      "✅ L3 希臘神話高級片語群組 (fall victim to / deprive of)",
+      "✅ 高中 4500 核心字彙理解迅速",
+      "✅ 課文長篇敘事主旨推論敏銳"
+    ],
+    "recs": [
+      "<strong>分詞構句主被動還原：</strong>做 L1 作業題時，看到省略連接詞的分詞，先還原主詞，主動用 V-ing，被動用 p.p.，避免憑感覺作答。",
+      "<strong>Not until 倒裝動詞還原：</strong>Not until 放句首時主要子句倒裝，助動詞 did 提前後，動詞務必還原為原形動詞。",
+      "<strong>學校段考成績連動：</strong>待老師於 Joseph 課程管理區登錄學校段考實測成績後，本走勢圖即自動更新呈現！"
+    ],
+    "trendTitle": "學校段考（月考）實測成績走勢 (待登錄)",
+    "trendDesc": "追蹤高二英文學校段考成績；待老師於 Joseph 課程管理區登錄後即時連動更新",
+    "trendEmpty": true,
+    "trendLabels": [
+      "第一次段考(待登錄)",
+      "第二次段考",
+      "第三次段考",
+      "學期總結"
+    ],
+    "trendY": [
+      "95分",
+      "90分",
+      "85分"
+    ],
+    "trendPoints": [
+      {
+        "x": 60,
+        "y": 55,
+        "score": "待登錄"
+      },
+      {
+        "x": 190,
+        "y": 55,
+        "score": "待登錄"
+      },
+      {
+        "x": 320,
+        "y": 55,
+        "score": "待登錄"
+      },
+      {
+        "x": 450,
+        "y": 55,
+        "score": "待登錄"
+      }
+    ],
+    "parentMsg": "Joseph 媽媽您好！今天課堂針對高二英文第一次段考範圍進行深度複習。依據目前【課堂學習與練習】（L1/L3課文與句型掌握達89%）與【作業檢討】（0926單字與L1演練約82%）綜合評估，目前實力穩定落在 86~89 分區間。課堂已特別強化分詞構句主被動判斷與倒裝句細節，待學校課堂小考成績陸續出爐後，將持續微調衝刺策略，目標段考穩取 90+ 頂標！",
+    "hwStatus": "部分繳交",
+    "trendEmptyIcon": "🏫",
+    "trendEmptyTitle": "學校段考成績待登錄 · 目前排空中",
+    "trendEmptyText": "待老師在 Joseph 課程管理區登錄學校段考（月考）實測成績後，系統將立即連動統計並繪製實力推移走勢！"
+  },
+  "ryan": {
+    "name": "Ryan",
+    "type": "全民英檢中級初試",
+    "target": "全民英檢中級通過 (初試, CEFR B1)",
+    "targetSub": "最新實力：聽力 84 / 閱讀 80 (總分 164，超過 160 通過標準)",
+    "score": "164 分 (通過門檻 160)",
+    "scoreSub": "嚴格依 Figma 歷次中級試卷（第一、二、四回）綜合判定 (CEFR B1)",
+    "notes": "380 筆筆跡 / 歷次中級試卷",
+    "notesSub": "依據 Figma 歷次中級模擬試卷批改紀錄判定 (無第三回)",
+    "hw": "100%",
+    "hwSub": "10月 Notion 繳交率 100% · 白板英檢練習優良",
+    "radarPoints": "0,-44 36,-21 39,23 0,40 -38,22 -36,-21",
+    "radarScores": [
+      "聽力推論: 45 / 100 (B1)",
+      "單字掌握: 44 / 100 (B1)",
+      "長篇聽力: 40 / 100 (B1)"
+    ],
+    "partsTitle": "全民英檢中級各項指標掌握度",
+    "parts": [
+      {
+        "name": "聽力測驗：簡短對話與長篇廣播",
+        "val": "84分 (掌握度優異)",
+        "width": "84%",
+        "color": "bg-emerald-500",
+        "textCol": "text-emerald-500"
+      },
+      {
+        "name": "閱讀測驗：詞彙與克漏字題型",
+        "val": "80分 (文法穩健，單字量足)",
+        "width": "80%",
+        "color": "bg-blue-500",
+        "textCol": "text-blue-500"
+      },
+      {
+        "name": "綜合實力總分（通過標準 160 分）",
+        "val": "164分 (+4分穩健過標)",
+        "width": "82%",
+        "color": "bg-indigo-500",
+        "textCol": "text-indigo-500"
+      }
+    ],
+    "weakTags": [
+      "⚠️ 長篇聽力多口音瞬時記憶延遲 · 2次",
+      "⚠️ 閱讀中長篇代名詞前後指涉判定 · 2次",
+      "⚠️ 複合形容詞連字號拼法細節 · 1次"
+    ],
+    "strongTags": [
+      "✅ 中級 3500 核心單字掌握度高",
+      "✅ 聽力第二部分對話直覺反應靈敏",
+      "✅ 閱讀時間掌控優異（剩餘 5 分鐘檢查）"
+    ],
+    "recs": [
+      "<strong>聽力跟讀保持語感：</strong>課後利用音檔維持每日 10 分鐘中級聽力聽抄或跟讀。",
+      "<strong>閱讀段落骨架掃描：</strong>面對長篇閱讀先掃首尾句定位段落主旨，再看題目定位細節。",
+      "<strong>錯題複習保持手感：</strong>考前持續複習白板上標註的聽力弱項與生字。"
+    ],
+    "trendTitle": "中級英檢模擬測驗 / 實力推移走勢",
+    "trendDesc": "嚴格依據 Figma 歷次英檢中級模擬卷（第一回、第二回、第四回）實際批改紀錄判定",
+    "trendEmpty": false,
+    "trendLabels": [
+      "第一回模擬",
+      "第二回模擬",
+      "第四回模擬",
+      "最新總分預估"
+    ],
+    "trendY": [
+      "170分",
+      "160分",
+      "150分"
+    ],
+    "trendPoints": [
+      {
+        "x": 60,
+        "y": 95,
+        "score": "155分"
+      },
+      {
+        "x": 190,
+        "y": 75,
+        "score": "160分"
+      },
+      {
+        "x": 320,
+        "y": 67,
+        "score": "162分"
+      },
+      {
+        "x": 450,
+        "y": 59,
+        "score": "164分"
+      }
+    ],
+    "parentMsg": "Ryan 媽媽您好！今天課堂帶 Ryan 深入檢討英檢中級模擬試卷。依據 Figma 白板實際批改（第一回 155 分、第二回 160 分、第四回 162 分，最新預估總分 164 分：聽力 84、閱讀 80），已穩定超越 160 分合格門檻！長篇聽力配速與克漏字文法掌握度高，考前持續保持題感即可穩健通關！",
+    "hwStatus": "優良"
+  }
+};
+
+    let currentStudent = 'enxin';
+
+    function switchStudent(key) {
+      currentStudent = key;
+      const data = studentData[key];
+
+      // Update Tabs
+      document.querySelectorAll('.student-btn').forEach(btn => {
+        btn.className = 'student-btn px-3 py-1.5 text-xs font-medium rounded-lg text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition whitespace-nowrap';
+      });
+      const activeBtn = document.getElementById('btn-' + key);
+      if (activeBtn) {
+        activeBtn.className = 'student-btn px-3 py-1.5 text-xs font-medium rounded-lg bg-[var(--foreground)] text-[var(--background)] transition whitespace-nowrap';
+      }
+
+      // Update Trend Card Header
+      const trendTitle = document.getElementById('trend-title');
+      const trendDesc = document.getElementById('trend-desc');
+      if (trendTitle && data.trendTitle) trendTitle.innerText = data.trendTitle;
+      if (trendDesc && data.trendDesc) trendDesc.innerText = data.trendDesc;
+
+      // Handle Empty / Pending State Overlay
+      const overlay = document.getElementById('trend-empty-overlay');
+      const overlayTitle = document.getElementById('trend-empty-title');
+      const overlayText = document.getElementById('trend-empty-text');
+      const overlayIcon = document.getElementById('trend-empty-icon');
+      const legendBox = document.getElementById('trend-legend-box');
+
+      if (data.trendEmpty) {
+        if (overlay) overlay.classList.remove('hidden');
+        if (overlayTitle) overlayTitle.innerText = data.trendEmptyTitle || '尚未開測 · 目前排空中';
+        if (overlayText) overlayText.innerText = data.trendEmptyText || '待白板建立後即時統計。';
+        if (overlayIcon && data.trendEmptyIcon) overlayIcon.innerText = data.trendEmptyIcon;
+        if (legendBox) legendBox.classList.add('opacity-30');
+      } else {
+        if (overlay) overlay.classList.add('hidden');
+        if (legendBox) legendBox.classList.remove('opacity-30');
+      }
+
+      // Dynamically update Trend SVG Line, Area & Dots
+      if (data.trendPoints && data.trendPoints.length === 4) {
+        const pts = data.trendPoints;
+        const lineD = `M ${pts[0].x} ${pts[0].y} L ${pts[1].x} ${pts[1].y} L ${pts[2].x} ${pts[2].y} L ${pts[3].x} ${pts[3].y}`;
+        const areaD = `${lineD} L ${pts[3].x} 140 L ${pts[0].x} 140 Z`;
+        const trendLine = document.getElementById('trend-line');
+        const trendArea = document.getElementById('trend-area');
+        const dotsContainer = document.getElementById('trend-dots');
+        if (trendLine) {
+          trendLine.setAttribute('d', lineD);
+          trendLine.setAttribute('opacity', data.trendEmpty ? '0.15' : '1');
+        }
+        if (trendArea) {
+          trendArea.setAttribute('d', areaD);
+          trendArea.setAttribute('opacity', data.trendEmpty ? '0.04' : '1');
+        }
+        if (dotsContainer) {
+          if (data.trendEmpty) {
+            dotsContainer.innerHTML = '';
+          } else {
+            dotsContainer.innerHTML = `
+              <circle cx="${pts[0].x}" cy="${pts[0].y}" r="4.5" fill="#3b82f6" stroke="white" stroke-width="2"/>
+              <circle cx="${pts[1].x}" cy="${pts[1].y}" r="4.5" fill="#3b82f6" stroke="white" stroke-width="2"/>
+              <circle cx="${pts[2].x}" cy="${pts[2].y}" r="4.5" fill="#3b82f6" stroke="white" stroke-width="2"/>
+              <circle cx="${pts[3].x}" cy="${pts[3].y}" r="6" fill="#10b981" stroke="white" stroke-width="2"/>
+            `;
+          }
+        }
+      }
+
+      // Update Trend Labels
+      if (data.trendLabels) {
+        document.getElementById('t-label-1').innerText = data.trendLabels[0];
+        document.getElementById('t-label-2').innerText = data.trendLabels[1];
+        document.getElementById('t-label-3').innerText = data.trendLabels[2];
+        document.getElementById('t-label-4').innerText = data.trendLabels[3];
+      }
+      if (data.trendY) {
+        document.getElementById('y-label-1').innerText = data.trendY[0];
+        document.getElementById('y-label-2').innerText = data.trendY[1];
+        document.getElementById('y-label-3').innerText = data.trendY[2];
+      }
+
+      // Update Top Stats
+      document.getElementById('stat-target').innerText = data.target;
+      document.getElementById('stat-target-sub').innerText = data.targetSub;
+      document.getElementById('stat-score').innerHTML = `${data.score} <span class="text-xs font-normal text-emerald-600">${data.scoreSub}</span>`;
+      document.getElementById('stat-notes').innerText = data.notes;
+      document.getElementById('stat-notes-sub').innerText = data.notesSub;
+      const hwRate = parseInt(data.hw) || 0;
+      const hwColor = hwRate >= 80 ? 'text-emerald-500' : (hwRate >= 50 ? 'text-amber-500' : 'text-rose-500');
+      document.getElementById('stat-hw').innerHTML = `${data.hw} <span class="text-xs font-normal ${hwColor}">(${data.hwStatus || '良好'})</span>`;
+      document.getElementById('stat-hw-sub').innerText = data.hwSub;
+
+      // Update Radar
+      document.getElementById('radar-shape').setAttribute('points', data.radarPoints);
+      document.getElementById('radar-sub-1').innerText = data.radarScores[0];
+      document.getElementById('radar-sub-2').innerText = data.radarScores[1];
+      document.getElementById('radar-sub-3').innerText = data.radarScores[2];
+
+      // Update Parts Bars
+      document.getElementById('parts-title').innerText = data.partsTitle;
+      const barsContainer = document.getElementById('parts-bars');
+      barsContainer.innerHTML = '';
+      data.parts.forEach(p => {
+        barsContainer.innerHTML += `
+          <div>
+            <div class="flex justify-between mb-1">
+              <span>${p.name}</span>
+              <span class="font-bold ${p.textCol}">${p.val}</span>
+            </div>
+            <div class="w-full bg-[var(--accent)] h-2 rounded-full overflow-hidden">
+              <div class="${p.color} h-2 rounded-full" style="width: ${p.width}"></div>
+            </div>
+          </div>
+        `;
+      });
+
+      // Update Tags
+      const weakContainer = document.getElementById('tags-weak');
+      weakContainer.innerHTML = '';
+      data.weakTags.forEach(t => {
+        weakContainer.innerHTML += `<span class="px-2.5 py-1 rounded-lg bg-rose-500/10 text-rose-500 border border-rose-500/20 font-medium">${t}</span>`;
+      });
+
+      const strongContainer = document.getElementById('tags-strong');
+      strongContainer.innerHTML = '';
+      data.strongTags.forEach(t => {
+        strongContainer.innerHTML += `<span class="px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 font-medium">${t}</span>`;
+      });
+
+      // Update Recs
+      const recsList = document.getElementById('recommendations-list');
+      recsList.innerHTML = '';
+      data.recs.forEach((r, idx) => {
+        recsList.innerHTML += `
+          <li class="flex items-start gap-2">
+            <span class="w-4 h-4 rounded-full bg-blue-500/20 text-blue-500 flex items-center justify-center shrink-0 mt-0.5 font-bold">${idx + 1}</span>
+            <span>${r}</span>
+          </li>
+        `;
+      });
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      if (!toast) return;
+      toast.innerText = msg || '已複製家長週報至剪貼簿！';
+      toast.classList.remove('opacity-0', 'pointer-events-none');
+      toast.classList.add('opacity-100');
+      setTimeout(() => {
+        toast.classList.remove('opacity-100');
+        toast.classList.add('opacity-0', 'pointer-events-none');
+      }, 2500);
+    }
+
+    function copyParentReport() {
+      const data = studentData[currentStudent];
+      if (!data || !data.parentMsg) {
+        alert('尚未設定該學生的家長週報訊息。');
+        return;
+      }
+
+      const modal = document.getElementById('parent-modal');
+      const title = document.getElementById('modal-student-title');
+      const textarea = document.getElementById('modal-report-text');
+
+      if (title) title.innerText = `${data.name} 課後進度週報 (LINE 格式)`;
+      if (textarea) textarea.value = data.parentMsg;
+      if (modal) modal.classList.remove('hidden');
+
+      performCopy();
+    }
+
+    function performCopy() {
+      const textarea = document.getElementById('modal-report-text');
+      if (!textarea) return;
+      const text = textarea.value;
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+          onCopySuccess();
+        }).catch(() => {
+          fallbackCopy(textarea);
+        });
+      } else {
+        fallbackCopy(textarea);
+      }
+    }
+
+    function fallbackCopy(textarea) {
+      try {
+        textarea.focus();
+        textarea.select();
+        const successful = document.execCommand('copy');
+        if (successful) {
+          onCopySuccess();
+        } else {
+          onCopyFail();
+        }
+      } catch (err) {
+        onCopyFail();
+      }
+    }
+
+    function onCopySuccess() {
+      const status = document.getElementById('modal-copy-status');
+      if (status) {
+        status.innerHTML = '✅ 已複製到剪貼簿！可直接至 LINE 貼上';
+        status.className = 'text-xs font-medium text-emerald-500 flex items-center gap-1.5';
+      }
+      showToast('已複製家長週報至剪貼簿！');
+    }
+
+    function onCopyFail() {
+      const status = document.getElementById('modal-copy-status');
+      if (status) {
+        status.innerHTML = '💡 瀏覽器安全性限制自動寫入剪貼簿，請手動全選下方文字按 Ctrl+C 複製';
+        status.className = 'text-xs font-medium text-amber-500 flex items-center gap-1.5';
+      }
+      const textarea = document.getElementById('modal-report-text');
+      if (textarea) {
+        textarea.focus();
+        textarea.select();
+      }
+    }
+
+    function closeParentModal() {
+      const modal = document.getElementById('parent-modal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    document.getElementById('parent-modal')?.addEventListener('click', (e) => {
+      if (e.target.id === 'parent-modal') closeParentModal();
+    });
+    // Initial load
+    
+    const BASE_ONLINE_URL = 'https://tingzhenghome.github.io/student-growth-dashboard';
+
+    function copyCurrentStudentParentLink() {
+      const data = studentData[currentStudent];
+      const url = `${BASE_ONLINE_URL}/students/${currentStudent}.html`;
+      navigator.clipboard.writeText(url).then(() => {
+        showToast(`已複製【${data.name}】專屬家長隱私連結！`);
+      }).catch(() => {
+        prompt(`請複製【${data.name}】家長專屬隱私連結：`, url);
+      });
+    }
+
+    function openCurrentStudentParentPage() {
+      const url = `./students/${currentStudent}.html`;
+      window.open(url, '_blank');
+    }
+
+    function openAllLinksModal() {
+      document.getElementById('all-links-modal')?.classList.remove('hidden');
+    }
+
+    function closeAllLinksModal() {
+      document.getElementById('all-links-modal')?.classList.add('hidden');
+    }
+
+    function copySpecificStudentLink(k, name) {
+      const url = `${BASE_ONLINE_URL}/students/${k}.html`;
+      navigator.clipboard.writeText(url).then(() => {
+        showToast(`已複製【${name}】家長專屬隱私連結！`);
+      }).catch(() => {
+        prompt(`請複製【${name}】家長專屬隱私連結：`, url);
+      });
+    }
+
+    document.getElementById('all-links-modal')?.addEventListener('click', (e) => {
+      if (e.target.id === 'all-links-modal') closeAllLinksModal();
+    });
+
+    switchStudent('enxin');
+  </script>
+
+  <!-- All Student Links Modal -->
+  <div id="all-links-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-[var(--card)] border border-[var(--border)] rounded-2xl max-w-xl w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-[var(--border)]">
+        <div class="flex items-center gap-2.5">
+          <span class="text-2xl">🔒</span>
+          <div>
+            <h3 class="font-bold text-base">各別學生專屬家長隱私連結一覽</h3>
+            <p class="text-xs text-[var(--muted-foreground)]">每個連結均經過獨立資料隔離，家長無法查看其他學生資訊</p>
+          </div>
+        </div>
+        <button onclick="closeAllLinksModal()" class="w-8 h-8 rounded-lg hover:bg-[var(--accent)] text-[var(--muted-foreground)] hover:text-[var(--foreground)] flex items-center justify-center text-lg transition">✕</button>
+      </div>
+
+      <div class="space-y-2 max-h-80 overflow-y-auto pr-1">
+        
+          <div class="p-3 rounded-xl bg-[var(--accent)] border border-[var(--border)] flex items-center justify-between gap-3">
+            <div>
+              <div class="font-bold text-xs flex items-center gap-1.5">
+                <span>恩忻</span>
+                <span class="text-[10px] font-normal px-1.5 py-0.5 rounded bg-[var(--card)] text-[var(--muted-foreground)] border border-[var(--border)]">多益公開測驗衝刺 (Figma 實測模擬導向)</span>
+              </div>
+              <div class="text-[11px] text-blue-500 font-mono mt-0.5 truncate max-w-xs md:max-w-sm">
+                https://tingzhenghome.github.io/student-growth-dashboard/students/enxin.html
+              </div>
+            </div>
+            <div class="flex items-center gap-1 shrink-0">
+              <a href="./students/enxin.html" target="_blank" class="p-1.5 rounded-lg bg-[var(--card)] hover:bg-[var(--border)] text-xs text-[var(--foreground)] transition" title="開新分頁查看">👁️</a>
+              <button onclick="copySpecificStudentLink('enxin', '恩忻')" class="px-2.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium transition" title="複製連結">複製</button>
+            </div>
+          </div>
+          
+          <div class="p-3 rounded-xl bg-[var(--accent)] border border-[var(--border)] flex items-center justify-between gap-3">
+            <div>
+              <div class="font-bold text-xs flex items-center gap-1.5">
+                <span>育穎</span>
+                <span class="text-[10px] font-normal px-1.5 py-0.5 rounded bg-[var(--card)] text-[var(--muted-foreground)] border border-[var(--border)]">多益實戰 (基礎扎根衝 600+)</span>
+              </div>
+              <div class="text-[11px] text-blue-500 font-mono mt-0.5 truncate max-w-xs md:max-w-sm">
+                https://tingzhenghome.github.io/student-growth-dashboard/students/yuying.html
+              </div>
+            </div>
+            <div class="flex items-center gap-1 shrink-0">
+              <a href="./students/yuying.html" target="_blank" class="p-1.5 rounded-lg bg-[var(--card)] hover:bg-[var(--border)] text-xs text-[var(--foreground)] transition" title="開新分頁查看">👁️</a>
+              <button onclick="copySpecificStudentLink('yuying', '育穎')" class="px-2.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium transition" title="複製連結">複製</button>
+            </div>
+          </div>
+          
+          <div class="p-3 rounded-xl bg-[var(--accent)] border border-[var(--border)] flex items-center justify-between gap-3">
+            <div>
+              <div class="font-bold text-xs flex items-center gap-1.5">
+                <span>子恩</span>
+                <span class="text-[10px] font-normal px-1.5 py-0.5 rounded bg-[var(--card)] text-[var(--muted-foreground)] border border-[var(--border)]">雅思學術組 (跨學科教材精讀打底期)</span>
+              </div>
+              <div class="text-[11px] text-blue-500 font-mono mt-0.5 truncate max-w-xs md:max-w-sm">
+                https://tingzhenghome.github.io/student-growth-dashboard/students/zien.html
+              </div>
+            </div>
+            <div class="flex items-center gap-1 shrink-0">
+              <a href="./students/zien.html" target="_blank" class="p-1.5 rounded-lg bg-[var(--card)] hover:bg-[var(--border)] text-xs text-[var(--foreground)] transition" title="開新分頁查看">👁️</a>
+              <button onclick="copySpecificStudentLink('zien', '子恩')" class="px-2.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium transition" title="複製連結">複製</button>
+            </div>
+          </div>
+          
+          <div class="p-3 rounded-xl bg-[var(--accent)] border border-[var(--border)] flex items-center justify-between gap-3">
+            <div>
+              <div class="font-bold text-xs flex items-center gap-1.5">
+                <span>柏文</span>
+                <span class="text-[10px] font-normal px-1.5 py-0.5 rounded bg-[var(--card)] text-[var(--muted-foreground)] border border-[var(--border)]">英檢中級雙合格 ➔ 會考 A++ 滿級分</span>
+              </div>
+              <div class="text-[11px] text-blue-500 font-mono mt-0.5 truncate max-w-xs md:max-w-sm">
+                https://tingzhenghome.github.io/student-growth-dashboard/students/bowen.html
+              </div>
+            </div>
+            <div class="flex items-center gap-1 shrink-0">
+              <a href="./students/bowen.html" target="_blank" class="p-1.5 rounded-lg bg-[var(--card)] hover:bg-[var(--border)] text-xs text-[var(--foreground)] transition" title="開新分頁查看">👁️</a>
+              <button onclick="copySpecificStudentLink('bowen', '柏文')" class="px-2.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium transition" title="複製連結">複製</button>
+            </div>
+          </div>
+          
+          <div class="p-3 rounded-xl bg-[var(--accent)] border border-[var(--border)] flex items-center justify-between gap-3">
+            <div>
+              <div class="font-bold text-xs flex items-center gap-1.5">
+                <span>惟羽</span>
+                <span class="text-[10px] font-normal px-1.5 py-0.5 rounded bg-[var(--card)] text-[var(--muted-foreground)] border border-[var(--border)]">國中教育會考 穩 A+ 衝 A++</span>
+              </div>
+              <div class="text-[11px] text-blue-500 font-mono mt-0.5 truncate max-w-xs md:max-w-sm">
+                https://tingzhenghome.github.io/student-growth-dashboard/students/weiyu.html
+              </div>
+            </div>
+            <div class="flex items-center gap-1 shrink-0">
+              <a href="./students/weiyu.html" target="_blank" class="p-1.5 rounded-lg bg-[var(--card)] hover:bg-[var(--border)] text-xs text-[var(--foreground)] transition" title="開新分頁查看">👁️</a>
+              <button onclick="copySpecificStudentLink('weiyu', '惟羽')" class="px-2.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium transition" title="複製連結">複製</button>
+            </div>
+          </div>
+          
+          <div class="p-3 rounded-xl bg-[var(--accent)] border border-[var(--border)] flex items-center justify-between gap-3">
+            <div>
+              <div class="font-bold text-xs flex items-center gap-1.5">
+                <span>鈞富</span>
+                <span class="text-[10px] font-normal px-1.5 py-0.5 rounded bg-[var(--card)] text-[var(--muted-foreground)] border border-[var(--border)]">國中教育會考 基礎扎根直升 A</span>
+              </div>
+              <div class="text-[11px] text-blue-500 font-mono mt-0.5 truncate max-w-xs md:max-w-sm">
+                https://tingzhenghome.github.io/student-growth-dashboard/students/junfu.html
+              </div>
+            </div>
+            <div class="flex items-center gap-1 shrink-0">
+              <a href="./students/junfu.html" target="_blank" class="p-1.5 rounded-lg bg-[var(--card)] hover:bg-[var(--border)] text-xs text-[var(--foreground)] transition" title="開新分頁查看">👁️</a>
+              <button onclick="copySpecificStudentLink('junfu', '鈞富')" class="px-2.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium transition" title="複製連結">複製</button>
+            </div>
+          </div>
+          
+          <div class="p-3 rounded-xl bg-[var(--accent)] border border-[var(--border)] flex items-center justify-between gap-3">
+            <div>
+              <div class="font-bold text-xs flex items-center gap-1.5">
+                <span>Joseph</span>
+                <span class="text-[10px] font-normal px-1.5 py-0.5 rounded bg-[var(--card)] text-[var(--muted-foreground)] border border-[var(--border)]">高中英文 (龍騰B3 U1-U3 段考衝刺)</span>
+              </div>
+              <div class="text-[11px] text-blue-500 font-mono mt-0.5 truncate max-w-xs md:max-w-sm">
+                https://tingzhenghome.github.io/student-growth-dashboard/students/joseph.html
+              </div>
+            </div>
+            <div class="flex items-center gap-1 shrink-0">
+              <a href="./students/joseph.html" target="_blank" class="p-1.5 rounded-lg bg-[var(--card)] hover:bg-[var(--border)] text-xs text-[var(--foreground)] transition" title="開新分頁查看">👁️</a>
+              <button onclick="copySpecificStudentLink('joseph', 'Joseph')" class="px-2.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium transition" title="複製連結">複製</button>
+            </div>
+          </div>
+          
+          <div class="p-3 rounded-xl bg-[var(--accent)] border border-[var(--border)] flex items-center justify-between gap-3">
+            <div>
+              <div class="font-bold text-xs flex items-center gap-1.5">
+                <span>Ryan</span>
+                <span class="text-[10px] font-normal px-1.5 py-0.5 rounded bg-[var(--card)] text-[var(--muted-foreground)] border border-[var(--border)]">全民英檢中級初試</span>
+              </div>
+              <div class="text-[11px] text-blue-500 font-mono mt-0.5 truncate max-w-xs md:max-w-sm">
+                https://tingzhenghome.github.io/student-growth-dashboard/students/ryan.html
+              </div>
+            </div>
+            <div class="flex items-center gap-1 shrink-0">
+              <a href="./students/ryan.html" target="_blank" class="p-1.5 rounded-lg bg-[var(--card)] hover:bg-[var(--border)] text-xs text-[var(--foreground)] transition" title="開新分頁查看">👁️</a>
+              <button onclick="copySpecificStudentLink('ryan', 'Ryan')" class="px-2.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium transition" title="複製連結">複製</button>
+            </div>
+          </div>
+          
+      </div>
+
+      <div class="flex justify-end pt-2 border-t border-[var(--border)]">
+        <button onclick="closeAllLinksModal()" class="px-4 py-2 text-xs font-semibold rounded-xl bg-[var(--accent)] hover:bg-[var(--border)] text-[var(--foreground)] transition">
+          關閉
+        </button>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

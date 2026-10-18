@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>Ryan · 個人學習成長與能力儀表板 | 廷暉英語</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  
+  <style>
+    :root {
+      --background: #f8fafc;
+      --foreground: #0f172a;
+      --card: #ffffff;
+      --border: #e2e8f0;
+      --muted-foreground: #64748b;
+      --accent: #f1f5f9;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --background: #090d16;
+        --foreground: #f8fafc;
+        --card: #111827;
+        --border: #1f2937;
+        --muted-foreground: #94a3b8;
+        --accent: #1e293b;
+      }
+    }
+    .radar-polygon {
+      transition: all 0.4s ease-out;
+    }
+    .metric-card:hover {
+      transform: translateY(-2px);
+    }
+  </style>
+
+  <style style="display:none">
+    /* Custom tooltip and animations */
+    .radar-polygon {
+      transition: all 0.4s ease-out;
+    }
+    .metric-card:hover {
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+<body class="bg-[var(--background)] text-[var(--foreground)] p-6 min-h-screen antialiased">
+
+  <!-- Header -->
+  <div class="max-w-6xl mx-auto space-y-6">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[var(--border)] pb-5">
+      <div>
+        <div class="flex items-center gap-3">
+          <span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-emerald-500/10 text-emerald-600 border border-emerald-500/20">🔒 學生個人學習檔案 · 家長專屬通道</span>
+          <span class="text-xs text-[var(--muted-foreground)]"><span>資料來源：Figma/FigJam 歷次白板學習痕跡與實測狀態 × Notion 課堂紀錄 (全體學生統計統一自 2026 年 10 月起算)</span></span>
+        </div>
+        <h1 class="text-2xl font-bold tracking-tight mt-1">Ryan · 個人長期學習歷程與能力儀表板</h1>
+        <p class="text-sm text-[var(--muted-foreground)]">廷暉英語專屬客製追蹤 · 盲點突破、學習進步趨勢與核心能力雷達分析</p>
+      </div>
+
+      <!-- Student Private Profile Badge (Privacy Protected) -->
+      <div class="flex items-center gap-2 bg-[var(--card)] border border-[var(--border)] px-3 py-2 rounded-xl shadow-sm shrink-0">
+        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span class="text-xs font-semibold text-[var(--foreground)]">Ryan 專屬成長檔案</span>
+        <span class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-600 font-medium border border-emerald-500/20">隱私保護</span>
+      </div>
+    </div>
+
+    <!-- Student Top Highlights Card -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div class="metric-card bg-[var(--card)] border border-[var(--border)] p-4 rounded-xl shadow-sm transition">
+        <span class="text-xs text-[var(--muted-foreground)]">當前階段 / 目標</span>
+        <div class="text-xl font-bold mt-1 text-blue-500" id="stat-target">多益 850+ 藍金證書</div>
+        <div class="text-xs text-[var(--muted-foreground)] mt-1" id="stat-target-sub">目標考試：12 月公開測驗</div>
+      </div>
+      <div class="metric-card bg-[var(--card)] border border-[var(--border)] p-4 rounded-xl shadow-sm transition">
+        <span class="text-xs text-[var(--muted-foreground)]">最新預估實力分數</span>
+        <div class="text-xl font-bold mt-1 text-emerald-500" id="stat-score">760 分 <span class="text-xs font-normal text-emerald-600">(多益小模擬 3~6 回盤整)</span></div>
+        <div class="text-xs text-[var(--muted-foreground)] mt-1" id="stat-score-sub">第四回模擬測驗估算</div>
+      </div>
+      <div class="metric-card bg-[var(--card)] border border-[var(--border)] p-4 rounded-xl shadow-sm transition">
+        <span class="text-xs text-[var(--muted-foreground)]">白板累積劃記分析</span>
+        <div class="text-xl font-bold mt-1 text-purple-500" id="stat-notes">544 筆筆跡 / 4 回試題</div>
+        <div class="text-xs text-[var(--muted-foreground)] mt-1" id="stat-notes-sub">已鎖定 12 個高頻盲點</div>
+      </div>
+      <div class="metric-card bg-[var(--card)] border border-[var(--border)] p-4 rounded-xl shadow-sm transition">
+        <span class="text-xs text-[var(--muted-foreground)]">課後作業繳交與掌握度 (10月起算)</span>
+        <div class="text-xl font-bold mt-1 text-amber-500" id="stat-hw">92% <span class="text-xs font-normal text-amber-600">優良</span></div>
+        <div class="text-xs text-[var(--muted-foreground)] mt-1" id="stat-hw-sub">單字記憶持續保持在 9 成</div>
+      </div>
+    </div>
+
+    <!-- Main Visualizations Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+      <!-- Left Column: Radar Chart (5 cols) -->
+      <div class="lg:col-span-5 bg-[var(--card)] border border-[var(--border)] p-5 rounded-2xl shadow-sm flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between">
+            <h3 class="font-bold text-base">六大核心能力雷達分析</h3>
+            <span class="text-xs px-2 py-0.5 rounded bg-[var(--accent)] text-[var(--muted-foreground)]">最新評估</span>
+          </div>
+          <p class="text-xs text-[var(--muted-foreground)] mt-0.5">統一以 CEFR C2 母語級實力 (頂部100分) 為全體學生固定參照基準</p>
+        </div>
+
+        <!-- Radar SVG -->
+        <div class="my-3 flex items-center justify-center">
+          <svg class="w-72 h-72" viewBox="-120 -120 240 240">
+            <!-- Background Web Rings -->
+            <polygon points="0,-100 86.6,-50 86.6,50 0,100 -86.6,50 -86.6,-50" fill="none" stroke="currentColor" class="text-[var(--border)] opacity-60" stroke-width="1"/>
+            <polygon points="0,-75 64.95,-37.5 64.95,37.5 0,75 -64.95,37.5 -64.95,-37.5" fill="none" stroke="currentColor" class="text-[var(--border)] opacity-40" stroke-width="1"/>
+            <polygon points="0,-50 43.3,-25 43.3,25 0,50 -43.3,25 -43.3,-25" fill="none" stroke="currentColor" class="text-[var(--border)] opacity-30" stroke-width="1"/>
+            <polygon points="0,-25 21.65,-12.5 21.65,12.5 0,25 -21.65,12.5 -21.65,-12.5" fill="none" stroke="currentColor" class="text-[var(--border)] opacity-20" stroke-width="1"/>
+
+            <!-- Axes -->
+            <line x1="0" y1="0" x2="0" y2="-100" stroke="currentColor" class="text-[var(--border)] opacity-40" stroke-width="1"/>
+            <line x1="0" y1="0" x2="86.6" y2="-50" stroke="currentColor" class="text-[var(--border)] opacity-40" stroke-width="1"/>
+            <line x1="0" y1="0" x2="86.6" y2="50" stroke="currentColor" class="text-[var(--border)] opacity-40" stroke-width="1"/>
+            <line x1="0" y1="0" x2="0" y2="100" stroke="currentColor" class="text-[var(--border)] opacity-40" stroke-width="1"/>
+            <line x1="0" y1="0" x2="-86.6" y2="50" stroke="currentColor" class="text-[var(--border)] opacity-40" stroke-width="1"/>
+            <line x1="0" y1="0" x2="-86.6" y2="-50" stroke="currentColor" class="text-[var(--border)] opacity-40" stroke-width="1"/>
+
+            <!-- Dynamic Polygon (CEFR C2 = 100 Benchmark) -->
+            <polygon id="radar-shape" class="radar-polygon fill-blue-500/25 stroke-blue-500" stroke-width="2.5"
+                     points="0,-58 52,-30 59,34 0,62 -56,33 -48,-28"/>
+
+            <!-- Labels -->
+            <text x="0" y="-108" text-anchor="middle" class="fill-[var(--muted-foreground)] text-[11px]">詞彙深度</text>
+            <text x="96" y="-52" text-anchor="start" class="fill-[var(--muted-foreground)] text-[11px]">文法結構</text>
+            <text x="96" y="55" text-anchor="start" class="fill-[var(--muted-foreground)] text-[11px]">語境推論</text>
+            <text x="0" y="115" text-anchor="middle" class="fill-[var(--muted-foreground)] text-[11px]">長篇耐力</text>
+            <text x="-96" y="55" text-anchor="end" class="fill-[var(--muted-foreground)] text-[11px]">細節查核</text>
+            <text x="-96" y="-52" text-anchor="end" class="fill-[var(--muted-foreground)] text-[11px]">答題配速</text>
+          </svg>
+        </div>
+
+        <div class="grid grid-cols-3 gap-2 pt-2 border-t border-[var(--border)] text-center text-xs">
+          <div><span class="text-[var(--muted-foreground)] block">核心維度 1</span><span class="font-bold text-emerald-500" id="radar-sub-1">語境推論: 68 / 100 (B2)</span></div>
+          <div><span class="text-[var(--muted-foreground)] block">核心維度 2</span><span class="font-bold text-blue-500" id="radar-sub-2">細節比對: 65 / 100 (B2)</span></div>
+          <div><span class="text-[var(--muted-foreground)] block">核心維度 3</span><span class="font-bold text-amber-500" id="radar-sub-3">詞性衍生: 58 / 100 (B1+)</span></div>
+        </div>
+      </div>
+
+      <!-- Right Column: Trend Chart & Section Breakdown (7 cols) -->
+      <div class="lg:col-span-7 space-y-6">
+
+        <!-- Trend Line Card -->
+        <div class="bg-[var(--card)] border border-[var(--border)] p-5 rounded-2xl shadow-sm">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h3 class="font-bold text-base" id="trend-title">歷次模擬測驗 / 實力推移走勢</h3>
+              <p class="text-xs text-[var(--muted-foreground)] mt-0.5" id="trend-desc">跨堂數追蹤整體預估總分與進步幅度</p>
+            </div>
+            <div class="flex items-center gap-3 text-xs" id="trend-legend-box">
+              <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span> 走勢軌跡</span>
+              <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> 最新落點</span>
+            </div>
+          </div>
+
+          <!-- Trend Chart SVG & Empty State Box -->
+          <div class="w-full h-44 relative" id="trend-box">
+            <!-- Empty / Pending State Overlay -->
+            <div id="trend-empty-overlay" class="absolute inset-0 flex flex-col items-center justify-center bg-[var(--card)]/95 backdrop-blur-[2px] rounded-xl z-20 hidden p-4 text-center border border-dashed border-[var(--border)]">
+              <span class="text-2xl mb-1" id="trend-empty-icon">📋</span>
+              <h4 class="font-bold text-xs text-[var(--foreground)]" id="trend-empty-title">會考模擬測驗尚未開測 · 目前排空中</h4>
+              <p class="text-[11px] text-[var(--muted-foreground)] mt-1 max-w-md leading-relaxed" id="trend-empty-text">目前聚焦文法單元重構，待 Figma 建立會考模擬檢討白板後即時統計。</p>
+            </div>
+            <svg class="w-full h-full overflow-visible" viewBox="0 0 500 150">
+              <!-- Y-Axis Guides -->
+              <line x1="40" y1="20" x2="490" y2="20" stroke="currentColor" class="text-[var(--border)]" stroke-dasharray="3,3"/>
+              <text x="30" y="24" text-anchor="end" class="fill-[var(--muted-foreground)] text-[10px]" id="y-label-1">800</text>
+              <line x1="40" y1="65" x2="490" y2="65" stroke="currentColor" class="text-[var(--border)]" stroke-dasharray="3,3"/>
+              <text x="30" y="69" text-anchor="end" class="fill-[var(--muted-foreground)] text-[10px]" id="y-label-2">750</text>
+              <line x1="40" y1="110" x2="490" y2="110" stroke="currentColor" class="text-[var(--border)]" stroke-dasharray="3,3"/>
+              <text x="30" y="114" text-anchor="end" class="fill-[var(--muted-foreground)] text-[10px]" id="y-label-3">700</text>
+
+              <!-- Lines & Areas -->
+              <path id="trend-area" d="M 60 76 L 190 63 L 320 70 L 450 61 L 450 140 L 60 140 Z" class="fill-blue-500/10"/>
+              <path id="trend-line" d="M 60 76 L 190 63 L 320 70 L 450 61" fill="none" stroke="#3b82f6" stroke-width="3" stroke-linecap="round"/>
+
+              <!-- Dots -->
+              <g id="trend-dots">
+                <circle cx="60" cy="76" r="4.5" fill="#3b82f6" stroke="white" stroke-width="2"/>
+                <circle cx="190" cy="63" r="4.5" fill="#3b82f6" stroke="white" stroke-width="2"/>
+                <circle cx="320" cy="70" r="4.5" fill="#3b82f6" stroke="white" stroke-width="2"/>
+                <circle cx="450" cy="61" r="6" fill="#10b981" stroke="white" stroke-width="2"/>
+              </g>
+
+              <!-- X-Axis Labels -->
+              <text x="60" y="145" text-anchor="middle" class="fill-[var(--muted-foreground)] text-[11px]" id="t-label-1">模擬第三回</text>
+              <text x="190" y="145" text-anchor="middle" class="fill-[var(--muted-foreground)] text-[11px]" id="t-label-2">模擬第四回</text>
+              <text x="320" y="145" text-anchor="middle" class="fill-[var(--muted-foreground)] text-[11px]" id="t-label-3">模擬第五回</text>
+              <text x="450" y="145" text-anchor="middle" class="fill-[var(--muted-foreground)] text-[11px] font-bold text-emerald-500" id="t-label-4">模擬第六回 (最新)</text>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Section Accuracy Bars -->
+        <div class="bg-[var(--card)] border border-[var(--border)] p-5 rounded-2xl shadow-sm">
+          <h3 class="font-bold text-base mb-3" id="parts-title">多益題型分項正確率掌握</h3>
+          <div class="space-y-3 text-xs" id="parts-bars">
+            <!-- Part 5 -->
+            <div>
+              <div class="flex justify-between mb-1">
+                <span>Part 5 單句填空（文法與詞性）</span>
+                <span class="font-bold text-blue-500" id="p5-val">76% (23/30)</span>
+              </div>
+              <div class="w-full bg-[var(--accent)] h-2 rounded-full overflow-hidden">
+                <div class="bg-blue-500 h-2 rounded-full" style="width: 76%" id="p5-bar"></div>
+              </div>
+            </div>
+            <!-- Part 6 -->
+            <div>
+              <div class="flex justify-between mb-1">
+                <span>Part 6 段落填空（語意銜接與預算）</span>
+                <span class="font-bold text-indigo-500" id="p6-val">87% (14/16)</span>
+              </div>
+              <div class="w-full bg-[var(--accent)] h-2 rounded-full overflow-hidden">
+                <div class="bg-indigo-500 h-2 rounded-full" style="width: 87%" id="p6-bar"></div>
+              </div>
+            </div>
+            <!-- Part 7 -->
+            <div>
+              <div class="flex justify-between mb-1">
+                <span>Part 7 篇章閱讀（多篇交叉比對與推論）</span>
+                <span class="font-bold text-emerald-500" id="p7-val">89% (48/54)</span>
+              </div>
+              <div class="w-full bg-[var(--accent)] h-2 rounded-full overflow-hidden">
+                <div class="bg-emerald-500 h-2 rounded-full" style="width: 89%" id="p7-bar"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Bottom: Weakness Tag Cloud & Action Plan -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+      <!-- Left: Weakness Heatmap & Mastery Tags -->
+      <div class="bg-[var(--card)] border border-[var(--border)] p-5 rounded-2xl shadow-sm">
+        <h3 class="font-bold text-base mb-2">白板劃記萃取：常見盲點熱力庫</h3>
+        <p class="text-xs text-[var(--muted-foreground)] mb-4">系統自動統計在各白板反覆訂正的詞彙與文法概念</p>
+
+        <div class="space-y-3" id="weakness-container">
+          <div>
+            <span class="text-xs font-semibold text-rose-500 flex items-center gap-1.5 mb-2">
+              <span class="w-2 h-2 rounded-full bg-rose-500"></span> 優先突破弱項 (需針對性加強)
+            </span>
+            <div class="flex flex-wrap gap-2 text-xs" id="tags-weak">
+              <span class="px-2.5 py-1 rounded-lg bg-rose-500/10 text-rose-500 border border-rose-500/20 font-medium">⚠️ 家族字衍生 (specific / specify) · 3次</span>
+              <span class="px-2.5 py-1 rounded-lg bg-rose-500/10 text-rose-500 border border-rose-500/20 font-medium">⚠️ expenditures / expendable 名詞辨析 · 2次</span>
+              <span class="px-2.5 py-1 rounded-lg bg-rose-500/10 text-rose-500 border border-rose-500/20 font-medium">⚠️ 閱讀細節常識干擾 (book a table) · 2次</span>
+            </div>
+          </div>
+
+          <div class="pt-2 border-t border-[var(--border)]">
+            <span class="text-xs font-semibold text-emerald-500 flex items-center gap-1.5 mb-2">
+              <span class="w-2 h-2 rounded-full bg-emerald-500"></span> 已穩固掌握概念 (答對率 > 90%)
+            </span>
+            <div class="flex flex-wrap gap-2 text-xs" id="tags-strong">
+              <span class="px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 font-medium">✅ regarding 介系詞群組</span>
+              <span class="px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 font-medium">✅ 境外事故句子插入定位</span>
+              <span class="px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 font-medium">✅ 跨篇章發票折扣數字核對</span>
+              <span class="px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 font-medium">✅ 線上對話弦外之音推導</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Actionable Milestones & Export Tools -->
+      <div class="bg-[var(--card)] border border-[var(--border)] p-5 rounded-2xl shadow-sm flex flex-col justify-between">
+        <div>
+          <h3 class="font-bold text-base mb-2">下階段突破焦點與學習建議</h3>
+          <p class="text-xs text-[var(--muted-foreground)] mb-4">基於最新白板數據產生的自習目標</p>
+
+          <ul class="space-y-2.5 text-xs" id="recommendations-list">
+            <li class="flex items-start gap-2">
+              <span class="w-4 h-4 rounded-full bg-blue-500/20 text-blue-500 flex items-center justify-center shrink-0 mt-0.5 font-bold">1</span>
+              <span><strong>Part 5 答題骨幹拆解：</strong>遇到長句填空先圈主詞與動詞，直接排除干擾詞性，目標單題壓縮至 25 秒內。</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="w-4 h-4 rounded-full bg-blue-500/20 text-blue-500 flex items-center justify-center shrink-0 mt-0.5 font-bold">2</span>
+              <span><strong>第六回作業計時練習：</strong>本次閱讀題目維持良好比對習慣，建議整回完整計時 75 分鐘不中斷，模擬實戰配速。</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="w-4 h-4 rounded-full bg-blue-500/20 text-blue-500 flex items-center justify-center shrink-0 mt-0.5 font-bold">3</span>
+              <span><strong>高頻字卡刷讀：</strong>複習白板上標註的 <code>regarding</code>、<code>cater</code>、<code>budget</code> 等一字多義生字。</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Quick Action Buttons -->
+        <div class="pt-4 border-t border-[var(--border)] mt-4 flex items-center gap-3">
+          <button onclick="copyParentReport()" class="flex-1 py-2 px-3 text-xs font-semibold rounded-xl bg-blue-600 hover:bg-blue-700 text-white transition flex items-center justify-center gap-1.5 shadow-sm">
+            <span>📱 複製本週進度報告 (LINE 格式)</span>
+          </button>
+          <button onclick="location.reload()" class="py-2 px-3 text-xs font-semibold rounded-xl bg-[var(--accent)] hover:bg-[var(--border)] text-[var(--foreground)] transition flex items-center gap-1">
+            <span>🔄 重新整理</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Parent Report Preview / Copy Modal -->
+  <div id="parent-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-[var(--card)] border border-[var(--border)] rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-[var(--border)]">
+        <div class="flex items-center gap-2.5">
+          <span class="text-2xl">📱</span>
+          <div>
+            <h3 class="font-bold text-base" id="modal-student-title">家長課後進度週報 (LINE 格式)</h3>
+            <p class="text-xs text-[var(--muted-foreground)]">可檢視、微調或直接複製發送給家長</p>
+          </div>
+        </div>
+        <button onclick="closeParentModal()" class="w-8 h-8 rounded-lg hover:bg-[var(--accent)] text-[var(--muted-foreground)] hover:text-[var(--foreground)] flex items-center justify-center text-lg transition">✕</button>
+      </div>
+
+      <div>
+        <label class="block text-xs font-semibold text-[var(--muted-foreground)] mb-1.5">週報內容（已排版完成）</label>
+        <textarea id="modal-report-text" rows="7" class="w-full text-xs p-3.5 rounded-xl bg-[var(--accent)] text-[var(--foreground)] border border-[var(--border)] focus:outline-none focus:ring-2 focus:ring-blue-500 leading-relaxed resize-none"></textarea>
+      </div>
+
+      <div id="modal-copy-status" class="text-xs font-medium text-emerald-500 flex items-center gap-1.5">
+        ✅ 已自動複製到剪貼簿，可直接至 LINE 貼上！
+      </div>
+
+      <div class="flex items-center justify-between pt-2 border-t border-[var(--border)]">
+        <span class="text-[11px] text-[var(--muted-foreground)]">若剪貼簿受瀏覽器限制，可選取框內文字複製</span>
+        <div class="flex items-center gap-2">
+          <button onclick="closeParentModal()" class="px-3.5 py-2 text-xs font-medium rounded-xl hover:bg-[var(--accent)] text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition">
+            關閉
+          </button>
+          <button onclick="performCopy()" class="px-4 py-2 text-xs font-semibold rounded-xl bg-blue-600 hover:bg-blue-700 text-white transition flex items-center gap-1.5 shadow-sm">
+            <span>📋 再次複製</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification Toast -->
+  <div id="toast" class="fixed bottom-6 right-6 bg-slate-900 text-white px-4 py-2.5 rounded-xl shadow-2xl text-xs font-medium opacity-0 transition-opacity pointer-events-none z-50">
+    已複製家長週報至剪貼簿！
+  </div>
+
+  <script>
+    const studentData = {
+  "ryan": {
+    "name": "Ryan",
+    "type": "全民英檢中級初試",
+    "target": "全民英檢中級通過 (初試, CEFR B1)",
+    "targetSub": "最新實力：聽力 84 / 閱讀 80 (總分 164，超過 160 通過標準)",
+    "score": "164 分 (通過門檻 160)",
+    "scoreSub": "嚴格依 Figma 歷次中級試卷（第一、二、四回）綜合判定 (CEFR B1)",
+    "notes": "380 筆筆跡 / 歷次中級試卷",
+    "notesSub": "依據 Figma 歷次中級模擬試卷批改紀錄判定 (無第三回)",
+    "hw": "100%",
+    "hwSub": "10月 Notion 繳交率 100% · 白板英檢練習優良",
+    "radarPoints": "0,-44 36,-21 39,23 0,40 -38,22 -36,-21",
+    "radarScores": [
+      "聽力推論: 45 / 100 (B1)",
+      "單字掌握: 44 / 100 (B1)",
+      "長篇聽力: 40 / 100 (B1)"
+    ],
+    "partsTitle": "全民英檢中級各項指標掌握度",
+    "parts": [
+      {
+        "name": "聽力測驗：簡短對話與長篇廣播",
+        "val": "84分 (掌握度優異)",
+        "width": "84%",
+        "color": "bg-emerald-500",
+        "textCol": "text-emerald-500"
+      },
+      {
+        "name": "閱讀測驗：詞彙與克漏字題型",
+        "val": "80分 (文法穩健，單字量足)",
+        "width": "80%",
+        "color": "bg-blue-500",
+        "textCol": "text-blue-500"
+      },
+      {
+        "name": "綜合實力總分（通過標準 160 分）",
+        "val": "164分 (+4分穩健過標)",
+        "width": "82%",
+        "color": "bg-indigo-500",
+        "textCol": "text-indigo-500"
+      }
+    ],
+    "weakTags": [
+      "⚠️ 長篇聽力多口音瞬時記憶延遲 · 2次",
+      "⚠️ 閱讀中長篇代名詞前後指涉判定 · 2次",
+      "⚠️ 複合形容詞連字號拼法細節 · 1次"
+    ],
+    "strongTags": [
+      "✅ 中級 3500 核心單字掌握度高",
+      "✅ 聽力第二部分對話直覺反應靈敏",
+      "✅ 閱讀時間掌控優異（剩餘 5 分鐘檢查）"
+    ],
+    "recs": [
+      "<strong>聽力跟讀保持語感：</strong>課後利用音檔維持每日 10 分鐘中級聽力聽抄或跟讀。",
+      "<strong>閱讀段落骨架掃描：</strong>面對長篇閱讀先掃首尾句定位段落主旨，再看題目定位細節。",
+      "<strong>錯題複習保持手感：</strong>考前持續複習白板上標註的聽力弱項與生字。"
+    ],
+    "trendTitle": "中級英檢模擬測驗 / 實力推移走勢",
+    "trendDesc": "嚴格依據 Figma 歷次英檢中級模擬卷（第一回、第二回、第四回）實際批改紀錄判定",
+    "trendEmpty": false,
+    "trendLabels": [
+      "第一回模擬",
+      "第二回模擬",
+      "第四回模擬",
+      "最新總分預估"
+    ],
+    "trendY": [
+      "170分",
+      "160分",
+      "150分"
+    ],
+    "trendPoints": [
+      {
+        "x": 60,
+        "y": 95,
+        "score": "155分"
+      },
+      {
+        "x": 190,
+        "y": 75,
+        "score": "160分"
+      },
+      {
+        "x": 320,
+        "y": 67,
+        "score": "162分"
+      },
+      {
+        "x": 450,
+        "y": 59,
+        "score": "164分"
+      }
+    ],
+    "parentMsg": "Ryan 媽媽您好！今天課堂帶 Ryan 深入檢討英檢中級模擬試卷。依據 Figma 白板實際批改（第一回 155 分、第二回 160 分、第四回 162 分，最新預估總分 164 分：聽力 84、閱讀 80），已穩定超越 160 分合格門檻！長篇聽力配速與克漏字文法掌握度高，考前持續保持題感即可穩健通關！",
+    "hwStatus": "優良"
+  }
+};
+    let currentStudent = 'ryan'; = 'enxin';
+
+    function switchStudent(key) {
+      currentStudent = key;
+      const data = studentData[key];
+
+      // Update Tabs
+      document.querySelectorAll('.student-btn').forEach(btn => {
+        btn.className = 'student-btn px-3 py-1.5 text-xs font-medium rounded-lg text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition whitespace-nowrap';
+      });
+      const activeBtn = document.getElementById('btn-' + key);
+      if (activeBtn) {
+        activeBtn.className = 'student-btn px-3 py-1.5 text-xs font-medium rounded-lg bg-[var(--foreground)] text-[var(--background)] transition whitespace-nowrap';
+      }
+
+      // Update Trend Card Header
+      const trendTitle = document.getElementById('trend-title');
+      const trendDesc = document.getElementById('trend-desc');
+      if (trendTitle && data.trendTitle) trendTitle.innerText = data.trendTitle;
+      if (trendDesc && data.trendDesc) trendDesc.innerText = data.trendDesc;
+
+      // Handle Empty / Pending State Overlay
+      const overlay = document.getElementById('trend-empty-overlay');
+      const overlayTitle = document.getElementById('trend-empty-title');
+      const overlayText = document.getElementById('trend-empty-text');
+      const overlayIcon = document.getElementById('trend-empty-icon');
+      const legendBox = document.getElementById('trend-legend-box');
+
+      if (data.trendEmpty) {
+        if (overlay) overlay.classList.remove('hidden');
+        if (overlayTitle) overlayTitle.innerText = data.trendEmptyTitle || '尚未開測 · 目前排空中';
+        if (overlayText) overlayText.innerText = data.trendEmptyText || '待白板建立後即時統計。';
+        if (overlayIcon && data.trendEmptyIcon) overlayIcon.innerText = data.trendEmptyIcon;
+        if (legendBox) legendBox.classList.add('opacity-30');
+      } else {
+        if (overlay) overlay.classList.add('hidden');
+        if (legendBox) legendBox.classList.remove('opacity-30');
+      }
+
+      // Dynamically update Trend SVG Line, Area & Dots
+      if (data.trendPoints && data.trendPoints.length === 4) {
+        const pts = data.trendPoints;
+        const lineD = `M ${pts[0].x} ${pts[0].y} L ${pts[1].x} ${pts[1].y} L ${pts[2].x} ${pts[2].y} L ${pts[3].x} ${pts[3].y}`;
+        const areaD = `${lineD} L ${pts[3].x} 140 L ${pts[0].x} 140 Z`;
+        const trendLine = document.getElementById('trend-line');
+        const trendArea = document.getElementById('trend-area');
+        const dotsContainer = document.getElementById('trend-dots');
+        if (trendLine) {
+          trendLine.setAttribute('d', lineD);
+          trendLine.setAttribute('opacity', data.trendEmpty ? '0.15' : '1');
+        }
+        if (trendArea) {
+          trendArea.setAttribute('d', areaD);
+          trendArea.setAttribute('opacity', data.trendEmpty ? '0.04' : '1');
+        }
+        if (dotsContainer) {
+          if (data.trendEmpty) {
+            dotsContainer.innerHTML = '';
+          } else {
+            dotsContainer.innerHTML = `
+              <circle cx="${pts[0].x}" cy="${pts[0].y}" r="4.5" fill="#3b82f6" stroke="white" stroke-width="2"/>
+              <circle cx="${pts[1].x}" cy="${pts[1].y}" r="4.5" fill="#3b82f6" stroke="white" stroke-width="2"/>
+              <circle cx="${pts[2].x}" cy="${pts[2].y}" r="4.5" fill="#3b82f6" stroke="white" stroke-width="2"/>
+              <circle cx="${pts[3].x}" cy="${pts[3].y}" r="6" fill="#10b981" stroke="white" stroke-width="2"/>
+            `;
+          }
+        }
+      }
+
+      // Update Trend Labels
+      if (data.trendLabels) {
+        document.getElementById('t-label-1').innerText = data.trendLabels[0];
+        document.getElementById('t-label-2').innerText = data.trendLabels[1];
+        document.getElementById('t-label-3').innerText = data.trendLabels[2];
+        document.getElementById('t-label-4').innerText = data.trendLabels[3];
+      }
+      if (data.trendY) {
+        document.getElementById('y-label-1').innerText = data.trendY[0];
+        document.getElementById('y-label-2').innerText = data.trendY[1];
+        document.getElementById('y-label-3').innerText = data.trendY[2];
+      }
+
+      // Update Top Stats
+      document.getElementById('stat-target').innerText = data.target;
+      document.getElementById('stat-target-sub').innerText = data.targetSub;
+      document.getElementById('stat-score').innerHTML = `${data.score} <span class="text-xs font-normal text-emerald-600">${data.scoreSub}</span>`;
+      document.getElementById('stat-notes').innerText = data.notes;
+      document.getElementById('stat-notes-sub').innerText = data.notesSub;
+      const hwRate = parseInt(data.hw) || 0;
+      const hwColor = hwRate >= 80 ? 'text-emerald-500' : (hwRate >= 50 ? 'text-amber-500' : 'text-rose-500');
+      document.getElementById('stat-hw').innerHTML = `${data.hw} <span class="text-xs font-normal ${hwColor}">(${data.hwStatus || '良好'})</span>`;
+      document.getElementById('stat-hw-sub').innerText = data.hwSub;
+
+      // Update Radar
+      document.getElementById('radar-shape').setAttribute('points', data.radarPoints);
+      document.getElementById('radar-sub-1').innerText = data.radarScores[0];
+      document.getElementById('radar-sub-2').innerText = data.radarScores[1];
+      document.getElementById('radar-sub-3').innerText = data.radarScores[2];
+
+      // Update Parts Bars
+      document.getElementById('parts-title').innerText = data.partsTitle;
+      const barsContainer = document.getElementById('parts-bars');
+      barsContainer.innerHTML = '';
+      data.parts.forEach(p => {
+        barsContainer.innerHTML += `
+          <div>
+            <div class="flex justify-between mb-1">
+              <span>${p.name}</span>
+              <span class="font-bold ${p.textCol}">${p.val}</span>
+            </div>
+            <div class="w-full bg-[var(--accent)] h-2 rounded-full overflow-hidden">
+              <div class="${p.color} h-2 rounded-full" style="width: ${p.width}"></div>
+            </div>
+          </div>
+        `;
+      });
+
+      // Update Tags
+      const weakContainer = document.getElementById('tags-weak');
+      weakContainer.innerHTML = '';
+      data.weakTags.forEach(t => {
+        weakContainer.innerHTML += `<span class="px-2.5 py-1 rounded-lg bg-rose-500/10 text-rose-500 border border-rose-500/20 font-medium">${t}</span>`;
+      });
+
+      const strongContainer = document.getElementById('tags-strong');
+      strongContainer.innerHTML = '';
+      data.strongTags.forEach(t => {
+        strongContainer.innerHTML += `<span class="px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 font-medium">${t}</span>`;
+      });
+
+      // Update Recs
+      const recsList = document.getElementById('recommendations-list');
+      recsList.innerHTML = '';
+      data.recs.forEach((r, idx) => {
+        recsList.innerHTML += `
+          <li class="flex items-start gap-2">
+            <span class="w-4 h-4 rounded-full bg-blue-500/20 text-blue-500 flex items-center justify-center shrink-0 mt-0.5 font-bold">${idx + 1}</span>
+            <span>${r}</span>
+          </li>
+        `;
+      });
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      if (!toast) return;
+      toast.innerText = msg || '已複製家長週報至剪貼簿！';
+      toast.classList.remove('opacity-0', 'pointer-events-none');
+      toast.classList.add('opacity-100');
+      setTimeout(() => {
+        toast.classList.remove('opacity-100');
+        toast.classList.add('opacity-0', 'pointer-events-none');
+      }, 2500);
+    }
+
+    function copyParentReport() {
+      const data = studentData[currentStudent];
+      if (!data || !data.parentMsg) {
+        alert('尚未設定該學生的家長週報訊息。');
+        return;
+      }
+
+      const modal = document.getElementById('parent-modal');
+      const title = document.getElementById('modal-student-title');
+      const textarea = document.getElementById('modal-report-text');
+
+      if (title) title.innerText = `${data.name} 課後進度週報 (LINE 格式)`;
+      if (textarea) textarea.value = data.parentMsg;
+      if (modal) modal.classList.remove('hidden');
+
+      performCopy();
+    }
+
+    function performCopy() {
+      const textarea = document.getElementById('modal-report-text');
+      if (!textarea) return;
+      const text = textarea.value;
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+          onCopySuccess();
+        }).catch(() => {
+          fallbackCopy(textarea);
+        });
+      } else {
+        fallbackCopy(textarea);
+      }
+    }
+
+    function fallbackCopy(textarea) {
+      try {
+        textarea.focus();
+        textarea.select();
+        const successful = document.execCommand('copy');
+        if (successful) {
+          onCopySuccess();
+        } else {
+          onCopyFail();
+        }
+      } catch (err) {
+        onCopyFail();
+      }
+    }
+
+    function onCopySuccess() {
+      const status = document.getElementById('modal-copy-status');
+      if (status) {
+        status.innerHTML = '✅ 已複製到剪貼簿！可直接至 LINE 貼上';
+        status.className = 'text-xs font-medium text-emerald-500 flex items-center gap-1.5';
+      }
+      showToast('已複製家長週報至剪貼簿！');
+    }
+
+    function onCopyFail() {
+      const status = document.getElementById('modal-copy-status');
+      if (status) {
+        status.innerHTML = '💡 瀏覽器安全性限制自動寫入剪貼簿，請手動全選下方文字按 Ctrl+C 複製';
+        status.className = 'text-xs font-medium text-amber-500 flex items-center gap-1.5';
+      }
+      const textarea = document.getElementById('modal-report-text');
+      if (textarea) {
+        textarea.focus();
+        textarea.select();
+      }
+    }
+
+    function closeParentModal() {
+      const modal = document.getElementById('parent-modal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    document.getElementById('parent-modal')?.addEventListener('click', (e) => {
+      if (e.target.id === 'parent-modal') closeParentModal();
+    });
+    // Initial load
+    switchStudent('ryan');
+  </script>
+</body>
+</html>
