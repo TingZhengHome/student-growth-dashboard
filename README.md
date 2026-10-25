@@ -18,7 +18,8 @@
 | **育穎** | 多益實戰 (衝 600+) | [https://tingzhenghome.github.io/student-growth-dashboard/students/yuying.html](https://tingzhenghome.github.io/student-growth-dashboard/students/yuying.html) |
 | **子恩** | 雅思學術組 (Band 7.0+) | [https://tingzhenghome.github.io/student-growth-dashboard/students/zien.html](https://tingzhenghome.github.io/student-growth-dashboard/students/zien.html) |
 | **柏文** | 會考 A++ 滿級分 (進度 6/16) | [https://tingzhenghome.github.io/student-growth-dashboard/students/bowen.html](https://tingzhenghome.github.io/student-growth-dashboard/students/bowen.html) |
-| **惟羽** | 會考 穩 A+ 衝 A++ (作業檢討) | [https://tingzhenghome.github.io/student-growth-dashboard/students/weiyu.html](https://tingzhenghome.github.io/student-growth-dashboard/students/weiyu.html) |
-| **鈞富** | 會考 直升 A 級 (進度 13/16) | [https://tingzhenghome.github.io/student-growth-dashboard/students/junfu.html](https://tingzhenghome.github.io/student-growth-dashboard/students/junfu.html) |
+| **惟羽** | 會考 穩 A+ 衝 A++ (文法重構 13/16) | [https://tingzhenghome.github.io/student-growth-dashboard/students/weiyu.html](https://tingzhenghome.github.io/student-growth-dashboard/students/weiyu.html) |
+| **鈞富** | 會考 直升 A 級 (進度 14/16) | [https://tingzhenghome.github.io/student-growth-dashboard/students/junfu.html](https://tingzhenghome.github.io/student-growth-dashboard/students/junfu.html) |
 | **Joseph** | 高中英文 龍騰B3 段考頂標 | [https://tingzhenghome.github.io/student-growth-dashboard/students/joseph.html](https://tingzhenghome.github.io/student-growth-dashboard/students/joseph.html) |
 | **Ryan** | 全民英檢中級初試 (164分過標) | [https://tingzhenghome.github.io/student-growth-dashboard/students/ryan.html](https://tingzhenghome.github.io/student-growth-dashboard/students/ryan.html) |
+| **George** | 雅思核心進階打底 | [https://tingzhenghome.github.io/student-growth-dashboard/students/george.html](https://tingzhenghome.github.io/student-growth-dashboard/students/george.html) |

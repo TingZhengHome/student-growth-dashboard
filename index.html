@@ -1505,18 +1505,17 @@
     const BASE_ONLINE_URL = 'https://tingzhenghome.github.io/student-growth-dashboard';
 
     function copyCurrentStudentParentLink() {
-      const data = studentData[currentStudent];
       const url = `${BASE_ONLINE_URL}/students/${currentStudent}.html`;
+      const name = studentData[currentStudent]?.name || currentStudent;
       navigator.clipboard.writeText(url).then(() => {
-        showToast(`已複製【${data.name}】專屬家長隱私連結！`);
+        showToast(`已成功複製【${name}】家長專屬隱私連結！`);
       }).catch(() => {
-        prompt(`請複製【${data.name}】家長專屬隱私連結：`, url);
+        prompt(`請複製【${name}】家長專屬隱私連結：`, url);
       });
     }
 
     function openCurrentStudentParentPage() {
-      const url = `./students/${currentStudent}.html`;
-      window.open(url, '_blank');
+      window.open(`./students/${currentStudent}.html`, '_blank');
     }
 
     function openAllLinksModal() {
@@ -1557,158 +1556,165 @@
         <button onclick="closeAllLinksModal()" class="w-8 h-8 rounded-lg hover:bg-[var(--accent)] text-[var(--muted-foreground)] hover:text-[var(--foreground)] flex items-center justify-center text-lg transition">✕</button>
       </div>
 
-      <div class="space-y-2 max-h-80 overflow-y-auto pr-1">
-        
-          <div class="p-3 rounded-xl bg-[var(--accent)] border border-[var(--border)] flex items-center justify-between gap-3">
+      <div class="space-y-2 max-h-[60vh] overflow-y-auto pr-1">
+        <div class="flex items-center justify-between p-3 rounded-xl bg-[var(--accent)]/50 border border-[var(--border)] hover:border-emerald-500/40 transition">
+          <div class="flex items-center gap-3">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
             <div>
-              <div class="font-bold text-xs flex items-center gap-1.5">
-                <span>恩忻</span>
-                <span class="text-[10px] font-normal px-1.5 py-0.5 rounded bg-[var(--card)] text-[var(--muted-foreground)] border border-[var(--border)]">多益公開測驗衝刺 (Figma 實測模擬導向)</span>
-              </div>
-              <div class="text-[11px] text-blue-500 font-mono mt-0.5 truncate max-w-xs md:max-w-sm">
-                https://tingzhenghome.github.io/student-growth-dashboard/students/enxin.html
-              </div>
-            </div>
-            <div class="flex items-center gap-1 shrink-0">
-              <a href="./students/enxin.html" target="_blank" class="p-1.5 rounded-lg bg-[var(--card)] hover:bg-[var(--border)] text-xs text-[var(--foreground)] transition" title="開新分頁查看">👁️</a>
-              <button onclick="copySpecificStudentLink('enxin', '恩忻')" class="px-2.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium transition" title="複製連結">複製</button>
+              <div class="font-semibold text-sm text-[var(--foreground)]">恩忻</div>
+              <div class="text-xs text-[var(--muted-foreground)]">多益公開測驗衝刺 (Figma 實測模擬導向)</div>
             </div>
           </div>
-          
-          <div class="p-3 rounded-xl bg-[var(--accent)] border border-[var(--border)] flex items-center justify-between gap-3">
+          <div class="flex items-center gap-2">
+            <button onclick="copySpecificStudentLink('enxin', '恩忻')" class="px-2.5 py-1.5 text-xs font-medium rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white transition flex items-center gap-1 shadow-sm">
+              <span>📋 複製專屬連結</span>
+            </button>
+            <a href="./students/enxin.html" target="_blank" class="px-2.5 py-1.5 text-xs font-medium rounded-lg bg-[var(--card)] hover:bg-[var(--accent)] text-[var(--foreground)] border border-[var(--border)] transition">
+              開啟
+            </a>
+          </div>
+        </div>
+        <div class="flex items-center justify-between p-3 rounded-xl bg-[var(--accent)]/50 border border-[var(--border)] hover:border-emerald-500/40 transition">
+          <div class="flex items-center gap-3">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
             <div>
-              <div class="font-bold text-xs flex items-center gap-1.5">
-                <span>育穎</span>
-                <span class="text-[10px] font-normal px-1.5 py-0.5 rounded bg-[var(--card)] text-[var(--muted-foreground)] border border-[var(--border)]">多益實戰 (基礎扎根衝 600+)</span>
-              </div>
-              <div class="text-[11px] text-blue-500 font-mono mt-0.5 truncate max-w-xs md:max-w-sm">
-                https://tingzhenghome.github.io/student-growth-dashboard/students/yuying.html
-              </div>
-            </div>
-            <div class="flex items-center gap-1 shrink-0">
-              <a href="./students/yuying.html" target="_blank" class="p-1.5 rounded-lg bg-[var(--card)] hover:bg-[var(--border)] text-xs text-[var(--foreground)] transition" title="開新分頁查看">👁️</a>
-              <button onclick="copySpecificStudentLink('yuying', '育穎')" class="px-2.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium transition" title="複製連結">複製</button>
+              <div class="font-semibold text-sm text-[var(--foreground)]">育穎</div>
+              <div class="text-xs text-[var(--muted-foreground)]">多益實戰 (基礎扎根衝 600+)</div>
             </div>
           </div>
-          
-          <div class="p-3 rounded-xl bg-[var(--accent)] border border-[var(--border)] flex items-center justify-between gap-3">
+          <div class="flex items-center gap-2">
+            <button onclick="copySpecificStudentLink('yuying', '育穎')" class="px-2.5 py-1.5 text-xs font-medium rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white transition flex items-center gap-1 shadow-sm">
+              <span>📋 複製專屬連結</span>
+            </button>
+            <a href="./students/yuying.html" target="_blank" class="px-2.5 py-1.5 text-xs font-medium rounded-lg bg-[var(--card)] hover:bg-[var(--accent)] text-[var(--foreground)] border border-[var(--border)] transition">
+              開啟
+            </a>
+          </div>
+        </div>
+        <div class="flex items-center justify-between p-3 rounded-xl bg-[var(--accent)]/50 border border-[var(--border)] hover:border-emerald-500/40 transition">
+          <div class="flex items-center gap-3">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
             <div>
-              <div class="font-bold text-xs flex items-center gap-1.5">
-                <span>子恩</span>
-                <span class="text-[10px] font-normal px-1.5 py-0.5 rounded bg-[var(--card)] text-[var(--muted-foreground)] border border-[var(--border)]">雅思學術組 (跨學科教材精讀打底期)</span>
-              </div>
-              <div class="text-[11px] text-blue-500 font-mono mt-0.5 truncate max-w-xs md:max-w-sm">
-                https://tingzhenghome.github.io/student-growth-dashboard/students/zien.html
-              </div>
-            </div>
-            <div class="flex items-center gap-1 shrink-0">
-              <a href="./students/zien.html" target="_blank" class="p-1.5 rounded-lg bg-[var(--card)] hover:bg-[var(--border)] text-xs text-[var(--foreground)] transition" title="開新分頁查看">👁️</a>
-              <button onclick="copySpecificStudentLink('zien', '子恩')" class="px-2.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium transition" title="複製連結">複製</button>
+              <div class="font-semibold text-sm text-[var(--foreground)]">子恩</div>
+              <div class="text-xs text-[var(--muted-foreground)]">雅思學術組 (跨學科教材精讀打底期)</div>
             </div>
           </div>
-          
-          <div class="p-3 rounded-xl bg-[var(--accent)] border border-[var(--border)] flex items-center justify-between gap-3">
+          <div class="flex items-center gap-2">
+            <button onclick="copySpecificStudentLink('zien', '子恩')" class="px-2.5 py-1.5 text-xs font-medium rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white transition flex items-center gap-1 shadow-sm">
+              <span>📋 複製專屬連結</span>
+            </button>
+            <a href="./students/zien.html" target="_blank" class="px-2.5 py-1.5 text-xs font-medium rounded-lg bg-[var(--card)] hover:bg-[var(--accent)] text-[var(--foreground)] border border-[var(--border)] transition">
+              開啟
+            </a>
+          </div>
+        </div>
+        <div class="flex items-center justify-between p-3 rounded-xl bg-[var(--accent)]/50 border border-[var(--border)] hover:border-emerald-500/40 transition">
+          <div class="flex items-center gap-3">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
             <div>
-              <div class="font-bold text-xs flex items-center gap-1.5">
-                <span>柏文</span>
-                <span class="text-[10px] font-normal px-1.5 py-0.5 rounded bg-[var(--card)] text-[var(--muted-foreground)] border border-[var(--border)]">英檢中級雙合格 ➔ 會考 A++ 滿級分</span>
-              </div>
-              <div class="text-[11px] text-blue-500 font-mono mt-0.5 truncate max-w-xs md:max-w-sm">
-                https://tingzhenghome.github.io/student-growth-dashboard/students/bowen.html
-              </div>
-            </div>
-            <div class="flex items-center gap-1 shrink-0">
-              <a href="./students/bowen.html" target="_blank" class="p-1.5 rounded-lg bg-[var(--card)] hover:bg-[var(--border)] text-xs text-[var(--foreground)] transition" title="開新分頁查看">👁️</a>
-              <button onclick="copySpecificStudentLink('bowen', '柏文')" class="px-2.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium transition" title="複製連結">複製</button>
+              <div class="font-semibold text-sm text-[var(--foreground)]">柏文</div>
+              <div class="text-xs text-[var(--muted-foreground)]">英檢中級雙合格 ➔ 會考 A++ 滿級分</div>
             </div>
           </div>
-          
-          <div class="p-3 rounded-xl bg-[var(--accent)] border border-[var(--border)] flex items-center justify-between gap-3">
+          <div class="flex items-center gap-2">
+            <button onclick="copySpecificStudentLink('bowen', '柏文')" class="px-2.5 py-1.5 text-xs font-medium rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white transition flex items-center gap-1 shadow-sm">
+              <span>📋 複製專屬連結</span>
+            </button>
+            <a href="./students/bowen.html" target="_blank" class="px-2.5 py-1.5 text-xs font-medium rounded-lg bg-[var(--card)] hover:bg-[var(--accent)] text-[var(--foreground)] border border-[var(--border)] transition">
+              開啟
+            </a>
+          </div>
+        </div>
+        <div class="flex items-center justify-between p-3 rounded-xl bg-[var(--accent)]/50 border border-[var(--border)] hover:border-emerald-500/40 transition">
+          <div class="flex items-center gap-3">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
             <div>
-              <div class="font-bold text-xs flex items-center gap-1.5">
-                <span>惟羽</span>
-                <span class="text-[10px] font-normal px-1.5 py-0.5 rounded bg-[var(--card)] text-[var(--muted-foreground)] border border-[var(--border)]">國中教育會考 穩 A+ 衝 A++</span>
-              </div>
-              <div class="text-[11px] text-blue-500 font-mono mt-0.5 truncate max-w-xs md:max-w-sm">
-                https://tingzhenghome.github.io/student-growth-dashboard/students/weiyu.html
-              </div>
-            </div>
-            <div class="flex items-center gap-1 shrink-0">
-              <a href="./students/weiyu.html" target="_blank" class="p-1.5 rounded-lg bg-[var(--card)] hover:bg-[var(--border)] text-xs text-[var(--foreground)] transition" title="開新分頁查看">👁️</a>
-              <button onclick="copySpecificStudentLink('weiyu', '惟羽')" class="px-2.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium transition" title="複製連結">複製</button>
+              <div class="font-semibold text-sm text-[var(--foreground)]">惟羽</div>
+              <div class="text-xs text-[var(--muted-foreground)]">國中教育會考 穩 A+ 衝 A++</div>
             </div>
           </div>
-          
-          <div class="p-3 rounded-xl bg-[var(--accent)] border border-[var(--border)] flex items-center justify-between gap-3">
+          <div class="flex items-center gap-2">
+            <button onclick="copySpecificStudentLink('weiyu', '惟羽')" class="px-2.5 py-1.5 text-xs font-medium rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white transition flex items-center gap-1 shadow-sm">
+              <span>📋 複製專屬連結</span>
+            </button>
+            <a href="./students/weiyu.html" target="_blank" class="px-2.5 py-1.5 text-xs font-medium rounded-lg bg-[var(--card)] hover:bg-[var(--accent)] text-[var(--foreground)] border border-[var(--border)] transition">
+              開啟
+            </a>
+          </div>
+        </div>
+        <div class="flex items-center justify-between p-3 rounded-xl bg-[var(--accent)]/50 border border-[var(--border)] hover:border-emerald-500/40 transition">
+          <div class="flex items-center gap-3">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
             <div>
-              <div class="font-bold text-xs flex items-center gap-1.5">
-                <span>鈞富</span>
-                <span class="text-[10px] font-normal px-1.5 py-0.5 rounded bg-[var(--card)] text-[var(--muted-foreground)] border border-[var(--border)]">國中教育會考 基礎扎根直升 A</span>
-              </div>
-              <div class="text-[11px] text-blue-500 font-mono mt-0.5 truncate max-w-xs md:max-w-sm">
-                https://tingzhenghome.github.io/student-growth-dashboard/students/junfu.html
-              </div>
-            </div>
-            <div class="flex items-center gap-1 shrink-0">
-              <a href="./students/junfu.html" target="_blank" class="p-1.5 rounded-lg bg-[var(--card)] hover:bg-[var(--border)] text-xs text-[var(--foreground)] transition" title="開新分頁查看">👁️</a>
-              <button onclick="copySpecificStudentLink('junfu', '鈞富')" class="px-2.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium transition" title="複製連結">複製</button>
+              <div class="font-semibold text-sm text-[var(--foreground)]">鈞富</div>
+              <div class="text-xs text-[var(--muted-foreground)]">國中教育會考 基礎扎根直升 A</div>
             </div>
           </div>
-          
-          <div class="p-3 rounded-xl bg-[var(--accent)] border border-[var(--border)] flex items-center justify-between gap-3">
+          <div class="flex items-center gap-2">
+            <button onclick="copySpecificStudentLink('junfu', '鈞富')" class="px-2.5 py-1.5 text-xs font-medium rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white transition flex items-center gap-1 shadow-sm">
+              <span>📋 複製專屬連結</span>
+            </button>
+            <a href="./students/junfu.html" target="_blank" class="px-2.5 py-1.5 text-xs font-medium rounded-lg bg-[var(--card)] hover:bg-[var(--accent)] text-[var(--foreground)] border border-[var(--border)] transition">
+              開啟
+            </a>
+          </div>
+        </div>
+        <div class="flex items-center justify-between p-3 rounded-xl bg-[var(--accent)]/50 border border-[var(--border)] hover:border-emerald-500/40 transition">
+          <div class="flex items-center gap-3">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
             <div>
-              <div class="font-bold text-xs flex items-center gap-1.5">
-                <span>Joseph</span>
-                <span class="text-[10px] font-normal px-1.5 py-0.5 rounded bg-[var(--card)] text-[var(--muted-foreground)] border border-[var(--border)]">高中英文 (龍騰B3 U1-U4 段考衝刺)</span>
-              </div>
-              <div class="text-[11px] text-blue-500 font-mono mt-0.5 truncate max-w-xs md:max-w-sm">
-                https://tingzhenghome.github.io/student-growth-dashboard/students/joseph.html
-              </div>
-            </div>
-            <div class="flex items-center gap-1 shrink-0">
-              <a href="./students/joseph.html" target="_blank" class="p-1.5 rounded-lg bg-[var(--card)] hover:bg-[var(--border)] text-xs text-[var(--foreground)] transition" title="開新分頁查看">👁️</a>
-              <button onclick="copySpecificStudentLink('joseph', 'Joseph')" class="px-2.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium transition" title="複製連結">複製</button>
+              <div class="font-semibold text-sm text-[var(--foreground)]">Joseph</div>
+              <div class="text-xs text-[var(--muted-foreground)]">高中英文 (龍騰B3 U1-U4 段考衝刺)</div>
             </div>
           </div>
-          
-          <div class="p-3 rounded-xl bg-[var(--accent)] border border-[var(--border)] flex items-center justify-between gap-3">
+          <div class="flex items-center gap-2">
+            <button onclick="copySpecificStudentLink('joseph', 'Joseph')" class="px-2.5 py-1.5 text-xs font-medium rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white transition flex items-center gap-1 shadow-sm">
+              <span>📋 複製專屬連結</span>
+            </button>
+            <a href="./students/joseph.html" target="_blank" class="px-2.5 py-1.5 text-xs font-medium rounded-lg bg-[var(--card)] hover:bg-[var(--accent)] text-[var(--foreground)] border border-[var(--border)] transition">
+              開啟
+            </a>
+          </div>
+        </div>
+        <div class="flex items-center justify-between p-3 rounded-xl bg-[var(--accent)]/50 border border-[var(--border)] hover:border-emerald-500/40 transition">
+          <div class="flex items-center gap-3">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
             <div>
-              <div class="font-bold text-xs flex items-center gap-1.5">
-                <span>Ryan</span>
-                <span class="text-[10px] font-normal px-1.5 py-0.5 rounded bg-[var(--card)] text-[var(--muted-foreground)] border border-[var(--border)]">全民英檢中級初試</span>
-              </div>
-              <div class="text-[11px] text-blue-500 font-mono mt-0.5 truncate max-w-xs md:max-w-sm">
-                https://tingzhenghome.github.io/student-growth-dashboard/students/ryan.html
-              </div>
-            </div>
-            <div class="flex items-center gap-1 shrink-0">
-              <a href="./students/ryan.html" target="_blank" class="p-1.5 rounded-lg bg-[var(--card)] hover:bg-[var(--border)] text-xs text-[var(--foreground)] transition" title="開新分頁查看">👁️</a>
-              <button onclick="copySpecificStudentLink('ryan', 'Ryan')" class="px-2.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium transition" title="複製連結">複製</button>
+              <div class="font-semibold text-sm text-[var(--foreground)]">Ryan</div>
+              <div class="text-xs text-[var(--muted-foreground)]">全民英檢中級初試</div>
             </div>
           </div>
-          
-          <div class="p-3 rounded-xl bg-[var(--accent)] border border-[var(--border)] flex items-center justify-between gap-3">
+          <div class="flex items-center gap-2">
+            <button onclick="copySpecificStudentLink('ryan', 'Ryan')" class="px-2.5 py-1.5 text-xs font-medium rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white transition flex items-center gap-1 shadow-sm">
+              <span>📋 複製專屬連結</span>
+            </button>
+            <a href="./students/ryan.html" target="_blank" class="px-2.5 py-1.5 text-xs font-medium rounded-lg bg-[var(--card)] hover:bg-[var(--accent)] text-[var(--foreground)] border border-[var(--border)] transition">
+              開啟
+            </a>
+          </div>
+        </div>
+        <div class="flex items-center justify-between p-3 rounded-xl bg-[var(--accent)]/50 border border-[var(--border)] hover:border-emerald-500/40 transition">
+          <div class="flex items-center gap-3">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
             <div>
-              <div class="font-bold text-xs flex items-center gap-1.5">
-                <span>George</span>
-                <span class="text-[10px] font-normal px-1.5 py-0.5 rounded bg-[var(--card)] text-[var(--muted-foreground)] border border-[var(--border)]">初級英檢衝刺與國中英文扎根</span>
-              </div>
-              <div class="text-[11px] text-blue-500 font-mono mt-0.5 truncate max-w-xs md:max-w-sm">
-                https://tingzhenghome.github.io/student-growth-dashboard/students/george.html
-              </div>
-            </div>
-            <div class="flex items-center gap-1 shrink-0">
-              <a href="./students/george.html" target="_blank" class="p-1.5 rounded-lg bg-[var(--card)] hover:bg-[var(--border)] text-xs text-[var(--foreground)] transition" title="開新分頁查看">👁️</a>
-              <button onclick="copySpecificStudentLink('george', 'George')" class="px-2.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium transition" title="複製連結">複製</button>
+              <div class="font-semibold text-sm text-[var(--foreground)]">George</div>
+              <div class="text-xs text-[var(--muted-foreground)]">初級英檢衝刺與國中英文扎根</div>
             </div>
           </div>
-          
+          <div class="flex items-center gap-2">
+            <button onclick="copySpecificStudentLink('george', 'George')" class="px-2.5 py-1.5 text-xs font-medium rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white transition flex items-center gap-1 shadow-sm">
+              <span>📋 複製專屬連結</span>
+            </button>
+            <a href="./students/george.html" target="_blank" class="px-2.5 py-1.5 text-xs font-medium rounded-lg bg-[var(--card)] hover:bg-[var(--accent)] text-[var(--foreground)] border border-[var(--border)] transition">
+              開啟
+            </a>
+          </div>
+        </div>
       </div>
 
-      <div class="flex justify-end pt-2 border-t border-[var(--border)]">
-        <button onclick="closeAllLinksModal()" class="px-4 py-2 text-xs font-semibold rounded-xl bg-[var(--accent)] hover:bg-[var(--border)] text-[var(--foreground)] transition">
-          關閉
-        </button>
+      <div class="pt-3 border-t border-[var(--border)] flex justify-between items-center text-xs text-[var(--muted-foreground)]">
+        <span>💡 建議直接發送專屬連結給對應家長，維持完全隱私隔離。</span>
+        <button onclick="closeAllLinksModal()" class="px-3 py-1.5 rounded-lg bg-[var(--accent)] text-[var(--foreground)] hover:bg-[var(--border)] transition font-medium">關閉</button>
       </div>
     </div>
   </div>

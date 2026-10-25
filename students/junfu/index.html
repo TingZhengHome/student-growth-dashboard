@@ -68,23 +68,23 @@
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
       <div class="metric-card bg-[var(--card)] border border-[var(--border)] p-4 rounded-xl shadow-sm transition">
         <span class="text-xs text-[var(--muted-foreground)]">當前階段 / 目標</span>
-        <div class="text-xl font-bold mt-1 text-blue-500" id="stat-target">多益 850+ 藍金證書</div>
-        <div class="text-xs text-[var(--muted-foreground)] mt-1" id="stat-target-sub">目標考試：12 月公開測驗</div>
+        <div class="text-xl font-bold mt-1 text-blue-500" id="stat-target">國中教育會考 英文科 A 級 (CEFR A2跨B1)</div>
+        <div class="text-xs text-[var(--muted-foreground)] mt-1" id="stat-target-sub">當前重點：國中文法體系重構 (進度 13/16 單元，已攻克 U13 名詞子句)</div>
       </div>
       <div class="metric-card bg-[var(--card)] border border-[var(--border)] p-4 rounded-xl shadow-sm transition">
         <span class="text-xs text-[var(--muted-foreground)]">最新預估實力分數</span>
-        <div class="text-xl font-bold mt-1 text-emerald-500" id="stat-score">760 分 <span class="text-xs font-normal text-emerald-600">(多益小模擬 3~6 回盤整)</span></div>
+        <div class="text-xl font-bold mt-1 text-emerald-500" id="stat-score">進度 14/16 單元 (87.5%) <span class="text-xs font-normal text-emerald-600">依 Figma 白板進度：已攻克 Unit 14 形容詞子句，銜接 Unit 15 附加問句與附和句</span></div>
         <div class="text-xs text-[var(--muted-foreground)] mt-1" id="stat-score-sub">第四回模擬測驗估算</div>
       </div>
       <div class="metric-card bg-[var(--card)] border border-[var(--border)] p-4 rounded-xl shadow-sm transition">
         <span class="text-xs text-[var(--muted-foreground)]">白板累積劃記分析</span>
-        <div class="text-xl font-bold mt-1 text-purple-500" id="stat-notes">544 筆筆跡 / 4 回試題</div>
-        <div class="text-xs text-[var(--muted-foreground)] mt-1" id="stat-notes-sub">已鎖定 12 個高頻盲點</div>
+        <div class="text-xl font-bold mt-1 text-purple-500" id="stat-notes">560 筆筆跡 / 文法 AED 攻堅</div>
+        <div class="text-xs text-[var(--muted-foreground)] mt-1" id="stat-notes-sub">Figma 白板已攻克 U10~U14，文法體系即將全套完封</div>
       </div>
       <div class="metric-card bg-[var(--card)] border border-[var(--border)] p-4 rounded-xl shadow-sm transition">
         <span class="text-xs text-[var(--muted-foreground)]">課後作業繳交與掌握度 (10月起算)</span>
-        <div class="text-xl font-bold mt-1 text-amber-500" id="stat-hw">92% <span class="text-xs font-normal text-amber-600">優良</span></div>
-        <div class="text-xs text-[var(--muted-foreground)] mt-1" id="stat-hw-sub">單字記憶持續保持在 9 成</div>
+        <div class="text-xl font-bold mt-1 text-amber-500" id="stat-hw">100% <span class="text-xs font-normal text-emerald-500">(優良)</span></div>
+        <div class="text-xs text-[var(--muted-foreground)] mt-1" id="stat-hw-sub">10月 Notion 繳交率 100% (2/2項全數繳交) · 白板形容詞子句演練優良</div>
       </div>
     </div>
 
@@ -195,7 +195,7 @@
 
         <!-- Section Accuracy Bars -->
         <div class="bg-[var(--card)] border border-[var(--border)] p-5 rounded-2xl shadow-sm">
-          <h3 class="font-bold text-base mb-3" id="parts-title">多益題型分項正確率掌握</h3>
+          <h3 class="font-bold text-base mb-3" id="parts-title">國中文法 16 單元體系重建進度 (13/16 單元)</h3>
           <div class="space-y-3 text-xs" id="parts-bars">
             <!-- Part 5 -->
             <div>
@@ -444,7 +444,8 @@
     "hwStatus": "優良"
   }
 };
-    let currentStudent = 'junfu'; = 'enxin';
+
+    let currentStudent = 'junfu';
 
     function switchStudent(key) {
       currentStudent = key;

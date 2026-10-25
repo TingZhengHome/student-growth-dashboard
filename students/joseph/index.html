@@ -68,23 +68,23 @@
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
       <div class="metric-card bg-[var(--card)] border border-[var(--border)] p-4 rounded-xl shadow-sm transition">
         <span class="text-xs text-[var(--muted-foreground)]">當前階段 / 目標</span>
-        <div class="text-xl font-bold mt-1 text-blue-500" id="stat-target">多益 850+ 藍金證書</div>
-        <div class="text-xs text-[var(--muted-foreground)] mt-1" id="stat-target-sub">目標考試：12 月公開測驗</div>
+        <div class="text-xl font-bold mt-1 text-blue-500" id="stat-target">高二第一次段考頂標 (90+ 分, CEFR B1+~B2)</div>
+        <div class="text-xs text-[var(--muted-foreground)] mt-1" id="stat-target-sub">校段考進度：課文精讀 + 混合題型 + 假設語氣與分詞構句</div>
       </div>
       <div class="metric-card bg-[var(--card)] border border-[var(--border)] p-4 rounded-xl shadow-sm transition">
         <span class="text-xs text-[var(--muted-foreground)]">最新預估實力分數</span>
-        <div class="text-xl font-bold mt-1 text-emerald-500" id="stat-score">760 分 <span class="text-xs font-normal text-emerald-600">(多益小模擬 3~6 回盤整)</span></div>
+        <div class="text-xl font-bold mt-1 text-emerald-500" id="stat-score">最新預估 88~91 分 <span class="text-xs font-normal text-emerald-600">課文精讀(92%) + 題型掌握(86%) + 段考模擬(待實測)</span></div>
         <div class="text-xs text-[var(--muted-foreground)] mt-1" id="stat-score-sub">第四回模擬測驗估算</div>
       </div>
       <div class="metric-card bg-[var(--card)] border border-[var(--border)] p-4 rounded-xl shadow-sm transition">
         <span class="text-xs text-[var(--muted-foreground)]">白板累積劃記分析</span>
-        <div class="text-xl font-bold mt-1 text-purple-500" id="stat-notes">544 筆筆跡 / 4 回試題</div>
-        <div class="text-xs text-[var(--muted-foreground)] mt-1" id="stat-notes-sub">已鎖定 12 個高頻盲點</div>
+        <div class="text-xl font-bold mt-1 text-purple-500" id="stat-notes">5 份白板 (課文3份 + 作業2份)</div>
+        <div class="text-xs text-[var(--muted-foreground)] mt-1" id="stat-notes-sub">最新白板「Joseph_L4_龍騰3」：課文精讀與假設語氣分詞構句</div>
       </div>
       <div class="metric-card bg-[var(--card)] border border-[var(--border)] p-4 rounded-xl shadow-sm transition">
         <span class="text-xs text-[var(--muted-foreground)]">課後作業繳交與掌握度 (10月起算)</span>
-        <div class="text-xl font-bold mt-1 text-amber-500" id="stat-hw">92% <span class="text-xs font-normal text-amber-600">優良</span></div>
-        <div class="text-xs text-[var(--muted-foreground)] mt-1" id="stat-hw-sub">單字記憶持續保持在 9 成</div>
+        <div class="text-xl font-bold mt-1 text-amber-500" id="stat-hw">100% <span class="text-xs font-normal text-emerald-500">(正常繳交)</span></div>
+        <div class="text-xs text-[var(--muted-foreground)] mt-1" id="stat-hw-sub">10月 Notion 派定作業已更新 · 白板掌握度 90%</div>
       </div>
     </div>
 
@@ -195,7 +195,7 @@
 
         <!-- Section Accuracy Bars -->
         <div class="bg-[var(--card)] border border-[var(--border)] p-5 rounded-2xl shadow-sm">
-          <h3 class="font-bold text-base mb-3" id="parts-title">多益題型分項正確率掌握</h3>
+          <h3 class="font-bold text-base mb-3" id="parts-title">Joseph 高中段考三大核心評量掌握度</h3>
           <div class="space-y-3 text-xs" id="parts-bars">
             <!-- Part 5 -->
             <div>
@@ -448,7 +448,8 @@
     "trendEmptyText": "待老師在 Joseph 課程管理區登錄學校段考（月考）實測成績後，系統將立即連動統計並繪製實力推移走勢！"
   }
 };
-    let currentStudent = 'joseph'; = 'enxin';
+
+    let currentStudent = 'joseph';
 
     function switchStudent(key) {
       currentStudent = key;

@@ -68,23 +68,23 @@
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
       <div class="metric-card bg-[var(--card)] border border-[var(--border)] p-4 rounded-xl shadow-sm transition">
         <span class="text-xs text-[var(--muted-foreground)]">當前階段 / 目標</span>
-        <div class="text-xl font-bold mt-1 text-blue-500" id="stat-target">多益 850+ 藍金證書</div>
-        <div class="text-xs text-[var(--muted-foreground)] mt-1" id="stat-target-sub">目標考試：12 月公開測驗</div>
+        <div class="text-xl font-bold mt-1 text-blue-500" id="stat-target">115 年國中教育會考 英文 A+ 穩健衝 A++ (CEFR B1)</div>
+        <div class="text-xs text-[var(--muted-foreground)] mt-1" id="stat-target-sub">當前重點：課後複習作業落實與觀念打底 (尚未進入模考)</div>
       </div>
       <div class="metric-card bg-[var(--card)] border border-[var(--border)] p-4 rounded-xl shadow-sm transition">
         <span class="text-xs text-[var(--muted-foreground)]">最新預估實力分數</span>
-        <div class="text-xl font-bold mt-1 text-emerald-500" id="stat-score">760 分 <span class="text-xs font-normal text-emerald-600">(多益小模擬 3~6 回盤整)</span></div>
+        <div class="text-xl font-bold mt-1 text-emerald-500" id="stat-score">全文法複習中：進度 13/16 單元 <span class="text-xs font-normal text-emerald-600">最新進度：Unit 10 特殊動詞完成 (進度 81%) · 下一單元：Unit 13 名詞子句 / Unit 14 被動語態</span></div>
         <div class="text-xs text-[var(--muted-foreground)] mt-1" id="stat-score-sub">第四回模擬測驗估算</div>
       </div>
       <div class="metric-card bg-[var(--card)] border border-[var(--border)] p-4 rounded-xl shadow-sm transition">
         <span class="text-xs text-[var(--muted-foreground)]">白板累積劃記分析</span>
-        <div class="text-xl font-bold mt-1 text-purple-500" id="stat-notes">544 筆筆跡 / 4 回試題</div>
-        <div class="text-xs text-[var(--muted-foreground)] mt-1" id="stat-notes-sub">已鎖定 12 個高頻盲點</div>
+        <div class="text-xl font-bold mt-1 text-purple-500" id="stat-notes">582 筆筆跡 / 課堂白板</div>
+        <div class="text-xs text-[var(--muted-foreground)] mt-1" id="stat-notes-sub">今日檢視 2 份白板：Unit 10 特殊動詞講義、10/18 課後作業檢討訂正</div>
       </div>
       <div class="metric-card bg-[var(--card)] border border-[var(--border)] p-4 rounded-xl shadow-sm transition">
         <span class="text-xs text-[var(--muted-foreground)]">課後作業繳交與掌握度 (10月起算)</span>
-        <div class="text-xl font-bold mt-1 text-amber-500" id="stat-hw">92% <span class="text-xs font-normal text-amber-600">優良</span></div>
-        <div class="text-xs text-[var(--muted-foreground)] mt-1" id="stat-hw-sub">單字記憶持續保持在 9 成</div>
+        <div class="text-xl font-bold mt-1 text-amber-500" id="stat-hw">100% <span class="text-xs font-normal text-emerald-500">(優良)</span></div>
+        <div class="text-xs text-[var(--muted-foreground)] mt-1" id="stat-hw-sub">10月 Notion 繳交率 100% (2/2項) · 白板作業掌握度 92%</div>
       </div>
     </div>
 
@@ -195,7 +195,7 @@
 
         <!-- Section Accuracy Bars -->
         <div class="bg-[var(--card)] border border-[var(--border)] p-5 rounded-2xl shadow-sm">
-          <h3 class="font-bold text-base mb-3" id="parts-title">多益題型分項正確率掌握</h3>
+          <h3 class="font-bold text-base mb-3" id="parts-title">全文法體系重構進度與課後複習掌握度</h3>
           <div class="space-y-3 text-xs" id="parts-bars">
             <!-- Part 5 -->
             <div>
@@ -444,7 +444,8 @@
     "trendEmptyText": "惟羽目前尚未進入會考模擬階段；待老師在 Figma 開立專屬複習作業檢討白板後，系統將依據檢討成效即時統計並繪製最新實力曲線！"
   }
 };
-    let currentStudent = 'weiyu'; = 'enxin';
+
+    let currentStudent = 'weiyu';
 
     function switchStudent(key) {
       currentStudent = key;
