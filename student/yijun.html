@@ -68,23 +68,23 @@
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
       <div class="metric-card bg-[var(--card)] border border-[var(--border)] p-4 rounded-xl shadow-sm transition">
         <span class="text-xs text-[var(--muted-foreground)]">當前階段 / 目標</span>
-        <div class="text-xl font-bold mt-1 text-blue-500" id="stat-target">學測英文頂標 13~15 級分 (段考穩 85+ 衝 90+)</div>
-        <div class="text-xs text-[var(--muted-foreground)] mt-1" id="stat-target-sub">全文法複習中：進度 2/15 單元 (Unit 1 五大句型完成、Unit 2 時態銜接中)</div>
+        <div class="text-xl font-bold mt-1 text-blue-500" id="stat-target">高二段考穩 80~85+ ➔ 衝刺學測英文頂標</div>
+        <div class="text-xs text-[var(--muted-foreground)] mt-1" id="stat-target-sub">文法總複習進度：U1 五大句型 (p.1-8)＋U2 時態 (至 p.15 進行式)｜約 1.3 / 15 單元</div>
       </div>
       <div class="metric-card bg-[var(--card)] border border-[var(--border)] p-4 rounded-xl shadow-sm transition">
         <span class="text-xs text-[var(--muted-foreground)]">最新預估實力分數</span>
-        <div class="text-xl font-bold mt-1 text-emerald-500" id="stat-score">段考 60分 (預估學測 9~10級分 盤整打底) <span class="text-xs font-normal text-emerald-600">依據課堂白板文法演練與五大句型結構掌握客觀評定 (CEFR B1 邁向 B2)</span></div>
-        <div class="text-xs text-[var(--muted-foreground)] mt-1" id="stat-score-sub">依據課堂白板文法演練與五大句型結構掌握客觀評定 (CEFR B1 邁向 B2)</div>
+        <div class="text-xl font-bold mt-1 text-emerald-500" id="stat-score">段考 ~60 分（基準起點） <span class="text-xs font-normal text-emerald-600">109北模二詞彙前 5 題全對 (5/5)，字彙潛力佳；主要失分在文法細節與詞性結構</span></div>
+        <div class="text-xs text-[var(--muted-foreground)] mt-1" id="stat-score-sub">109北模二詞彙前 5 題全對 (5/5)，字彙潛力佳；主要失分在文法細節與詞性結構</div>
       </div>
       <div class="metric-card bg-[var(--card)] border border-[var(--border)] p-4 rounded-xl shadow-sm transition">
         <span class="text-xs text-[var(--muted-foreground)]">白板累積劃記分析</span>
-        <div class="text-xl font-bold mt-1 text-purple-500" id="stat-notes">42 筆白板筆記 / 五大句型句構分析</div>
-        <div class="text-xs text-[var(--muted-foreground)] mt-1" id="stat-notes-sub">涵蓋 S+V/S+V+C/S+V+O/S+V+IO+DO/S+V+O+OC、使役與感官動詞受詞補語</div>
+        <div class="text-xl font-bold mt-1 text-purple-500" id="stat-notes">3 份白板追蹤（11/10 北模二 + 11/15 U1/U2）</div>
+        <div class="text-xs text-[var(--muted-foreground)] mt-1" id="stat-notes-sub">涵蓋 6 大錯題類型已登錄錯題庫 + 20+ 組 109北模字根衍生詞筆記</div>
       </div>
       <div class="metric-card bg-[var(--card)] border border-[var(--border)] p-4 rounded-xl shadow-sm transition">
         <span class="text-xs text-[var(--muted-foreground)]">課後作業繳交與掌握度 (10月起算)</span>
-        <div class="text-xl font-bold mt-1 text-amber-500" id="stat-hw">100% <span class="text-xs font-normal text-emerald-500">(優良)</span></div>
-        <div class="text-xs text-[var(--muted-foreground)] mt-1" id="stat-hw-sub">Notion 已派定首週作業 · 白板掌握度 85%</div>
+        <div class="text-xl font-bold mt-1 text-amber-500" id="stat-hw">2 項待辦 <span class="text-xs font-normal text-rose-500">(已派定首週特訓)</span></div>
+        <div class="text-xs text-[var(--muted-foreground)] mt-1" id="stat-hw-sub">Notion 已派定：文法_Unit1五大句型_演練（含講義 p.9-11）＋ 客製化錯題特訓作業</div>
       </div>
     </div>
 
@@ -195,7 +195,7 @@
 
         <!-- Section Accuracy Bars -->
         <div class="bg-[var(--card)] border border-[var(--border)] p-5 rounded-2xl shadow-sm">
-          <h3 class="font-bold text-base mb-3" id="parts-title">高中文法與學測核心指標掌握度</h3>
+          <h3 class="font-bold text-base mb-3" id="parts-title">高中文法重構與學測診斷掌握度</h3>
           <div class="space-y-3 text-xs" id="parts-bars">
             <!-- Part 5 -->
             <div>
@@ -350,73 +350,75 @@
     const studentData = {
   "yijun": {
     "name": "奕鈞",
-    "type": "高中英文學測衝刺與全文法體系重構",
-    "target": "學測英文頂標 13~15 級分 (段考穩 85+ 衝 90+)",
-    "targetSub": "全文法複習中：進度 2/15 單元 (Unit 1 五大句型完成、Unit 2 時態銜接中)",
-    "score": "段考 60分 (預估學測 9~10級分 盤整打底)",
-    "scoreSub": "依據課堂白板文法演練與五大句型結構掌握客觀評定 (CEFR B1 邁向 B2)",
-    "notes": "42 筆白板筆記 / 五大句型句構分析",
-    "notesSub": "涵蓋 S+V/S+V+C/S+V+O/S+V+IO+DO/S+V+O+OC、使役與感官動詞受詞補語",
-    "hw": "100%",
-    "hwSub": "Notion 已派定首週作業 · 白板掌握度 85%",
-    "radarPoints": "0,-46 42,-22 45,24 0,48 -40,24 -38,-21",
+    "type": "高二英文｜文法系統重構＋學測詞彙與寫作銜接",
+    "target": "高二段考穩 80~85+ ➔ 衝刺學測英文頂標",
+    "targetSub": "文法總複習進度：U1 五大句型 (p.1-8)＋U2 時態 (至 p.15 進行式)｜約 1.3 / 15 單元",
+    "score": "段考 ~60 分（基準起點）",
+    "scoreSub": "109北模二詞彙前 5 題全對 (5/5)，字彙潛力佳；主要失分在文法細節與詞性結構",
+    "notes": "3 份白板追蹤（11/10 北模二 + 11/15 U1/U2）",
+    "notesSub": "涵蓋 6 大錯題類型已登錄錯題庫 + 20+ 組 109北模字根衍生詞筆記",
+    "hw": "2 項待辦",
+    "hwSub": "Notion 已派定：文法_Unit1五大句型_演練（含講義 p.9-11）＋ 客製化錯題特訓作業",
+    "radarPoints": "0,-46 29,-17 38,22 0,32 -29,17 -33,-19",
     "radarScores": [
-      "文法結構: 48 / 100 (B1+)",
-      "句構分析: 46 / 100 (B1+)",
-      "詞彙深度: 42 / 100 (B1)"
+      "詞彙深度: 46 / 100 (B1)",
+      "文法結構: 34 / 100 (A2+/B1)",
+      "細節查核: 33 / 100 (待補強)"
     ],
-    "partsTitle": "高中文法與學測核心指標掌握度",
+    "partsTitle": "高中文法重構與學測診斷掌握度",
     "parts": [
       {
-        "name": "五大基本句型 (S+V, S+V+C, S+V+O, S+V+IO+DO, S+V+O+OC)",
-        "val": "88分 (主要句型判斷流暢，受詞補語區辨逐步清晰)",
-        "width": "88%",
-        "color": "bg-emerald-500",
-        "textCol": "text-emerald-500"
+        "name": "Unit 1 五大基本句型（講義 p.1-8 完課；p.9-11 演練待續）",
+        "val": "62分（句型概念建立中，詞性搭配/時態/使役感官細節錯誤仍高）",
+        "width": "62%",
+        "color": "bg-amber-500",
+        "textCol": "text-amber-500"
       },
       {
-        "name": "使役動詞 (make/have/let) 與感官動詞之受詞補語變化",
-        "val": "82分 (原形動詞 vs 現在分詞 V-ing vs 過去分詞 p.p. 辨析需持續熟練)",
-        "width": "82%",
+        "name": "Unit 2 動詞時態系統（講義 p.12-15 至現在進行式/狀態動詞）",
+        "val": "58分（三單與真理概念已懂，時態一致與主詞單複數細節待強化）",
+        "width": "58%",
         "color": "bg-blue-500",
         "textCol": "text-blue-500"
       },
       {
-        "name": "動詞時態系統 (現在簡單、進行、完成式與過去完成式時間軸)",
-        "val": "80分 (銜接 Unit 2，需強化時間副詞與時態對照邏輯)",
-        "width": "80%",
-        "color": "bg-indigo-500",
-        "textCol": "text-indigo-500"
+        "name": "109 北模二詞彙測驗與長難句結構診斷（第 1-5 題實測）",
+        "val": "75分（詞彙前 5 題 5/5 全對！長句關代與分詞片語仍需拆解引導）",
+        "width": "75%",
+        "color": "bg-emerald-500",
+        "textCol": "text-emerald-500"
       }
     ],
     "weakTags": [
-      "⚠️ 受詞補語 (OC) 與受詞 (O) / 受詞與間接受詞混淆 · 1次",
-      "⚠️ 使役/感官動詞受詞補語「被動語態省略 to」及「接 p.p.」考點 · 1次",
-      "⚠️ 過去完成式 had + p.p. 與過去簡單式時間先後先後序 · 1次"
+      "⚠️ 詞性與形近字混淆（heavier→heavily / excitment→excited / trouble→terrible / peak→pale / like→tired）· 5處",
+      "⚠️ 主詞動詞一致與時態疏忽（Mark sing / grandparents gets / antiques belongs / showed / wrote / made / didn't want）· 8處",
+      "⚠️ 及物與使役感官搭配誤用（prefer to N / talk English / let wait→kept waiting / have never see / bathed and comb）· 5處",
+      "⚠️ 長難句關係子句與分詞片語斷句（109北模二仰賴紅筆標記 S / V / adj子句）· 持續引導"
     ],
     "strongTags": [
-      "✅ 五大基本句型（S+V / S+V+C / S+V+O）主詞與動詞定位精準",
-      "✅ 連綴動詞 look/sound/taste/smell/feel 後接形容詞與 like + N 概念清楚",
-      "✅ 授與動詞雙賓語（IO+DO 轉換為 DO + to/for + IO）掌握扎實"
+      "✅ 109 北模二詞彙第 1–5 題全對 (5/5：flesh / resolved / genuinely / aggressive / requested)",
+      "✅ 能順暢跟隨五大句型框架拆解（S+V+O / SC / IO+DO / OC）並區分 to/for 授與方向",
+      "✅ 積極累積字根字首與衍生詞族（如 con-sult、re-serve、turn out 等 20+ 組筆記）"
     ],
     "recs": [
-      "<strong>受詞補語檢驗法（S=C / O=OC）：</strong>判斷第 5 句型時，利用「受詞與補語是否構成主謂關係 (O is OC)」來速判，例如 We consider him honest (He is honest) 即為 S+V+O+OC。",
-      "<strong>使役與感官動詞三部曲：</strong>先看受詞為主動（原形 V / V-ing）或被動（p.p.）；特別注意 have sb. V 與 have sth. p.p. 的主被動受詞差異。",
-      "<strong>時態時間軸對照法：</strong>Unit 2 時態解題切忌死背中文，畫出現在、過去、未來時間軸，精確鎖定動作發生點與先後次序。"
+      "<strong>動詞「時態＋單複數」雙重檢查表：</strong>下筆寫每個動詞前先問兩題：① 時間點是現在還是過去？（避免 shows/wrote/made/heard/didn't want 時態錯亂）；② 主詞是單數還是複數？（避免 Mark sing、grandparents gets、antiques belongs）。",
+      "<strong>連綴動詞與詞性直覺矯正：</strong>牢記「look / smell / seem + 形容詞 (tired / terrible / excited)」，只有後接「名詞」時才加 like；同時記熟 occurred 雙寫 r 與 pale（蒼白）拼法。",
+      "<strong>及物與使役感官固定搭配防踩雷：</strong>背熟「prefer + 名詞（不加 to）」、「speak English」、「keep sb. waiting（勿寫 let wait）」，以及對等連接詞後過去分詞一致性（bathed and combed）。",
+      "<strong>長難句先括號 [ ] 再抓 S + V：</strong>寫模擬考與未來學測文章時，遇到分詞片語（walking down...）或 which/that 形容詞子句先用括號框起，確定主詞單複數與主要動詞後再作答。"
     ],
-    "trendTitle": "學測英文模擬與段考實力推移走勢",
-    "trendDesc": "以全文法體系重構進度與課堂演練掌握度為依據",
-    "trendEmpty": false,
+    "trendTitle": "高二段考與學測模擬成績推移走勢",
+    "trendDesc": "已完成 11/10 北模詞彙基準診斷與 11/15 文法啟動，後續以真實測驗分數累加繪圖",
+    "trendEmpty": true,
     "trendLabels": [
       "段考基準落點",
-      "第1堂:五大句型",
-      "Unit 2 時態銜接",
-      "目標學測頂標"
+      "11/10 北模詞彙",
+      "11/15 U1/U2啟動",
+      "下階段實測"
     ],
     "trendY": [
-      "90分 (14級)",
-      "75分 (12級)",
-      "60分 (9級)"
+      "90分",
+      "75分",
+      "60分"
     ],
     "trendPoints": [
       {
@@ -426,22 +428,25 @@
       },
       {
         "x": 190,
-        "y": 92,
-        "score": "68分"
+        "y": 110,
+        "score": "起點"
       },
       {
         "x": 320,
-        "y": 78,
-        "score": "74分"
+        "y": 110,
+        "score": "打底中"
       },
       {
         "x": 450,
-        "y": 40,
-        "score": "88分"
+        "y": 110,
+        "score": "待實測"
       }
     ],
-    "parentMsg": "奕鈞媽媽您好！今天課堂正式開啟奕鈞的高中英文學測實力重構計畫。今天重點聚焦在「Unit 1 五大基本句型」的架構重組與「Unit 2 時態系統」的銜接。奕鈞上課態度認真專注，對於主詞、動詞與受詞的定位抓得相當快速！今天特別針對段考與學測最愛考的「受詞 vs 受詞補語區辨」、「使役與感官動詞受詞補語的主被動變化（原形/分詞/形容詞）」進行觀念打底與實戰題型精解。課後已派定專屬客製化三格式作業（含五大句型特訓與高二學測核心字彙），循序漸進幫奕鈞把文法地基扎穩，段考向 85+ 邁進！",
-    "hwStatus": "優良"
+    "parentMsg": "奕鈞媽媽您好！目前高二英文課程正式以「系統重構高中文法」並銜接「學測詞彙與寫作訓練」作為主軸。透過 11/10《109北模二》前測我們發現，奕鈞的單字推論手感其實相當不錯（詞彙前 5 題全對！），目前段考落於 60 分上下主要是因為「詞性修飾混淆」、「主詞單複數與時態一致性疏忽」以及「使役／感官與及物動詞搭配失分」。今天（11/15）課堂已完成《U1 五大基本句型》第 1–8 頁重點觀念與批改，並推進至《U2 動詞時態》第 15 頁（現在簡單式與進行式／狀態動詞），把每個易踩雷點都揪了出來！本週課後作業除了複習 U1 講義演練外，我已為奕鈞量身生成一份對症錯題特訓與北模核心字彙作業（含 Word、PDF、圖片檔與閱讀音檔），陪他一步一步把文法漏洞補齊，穩步向段考 80–85+ 與未來學測寫作衝刺前進！",
+    "hwStatus": "已派定首週特訓",
+    "trendEmptyIcon": "📊",
+    "trendEmptyTitle": "目前基準：高二段考 ~60 分（文法重構與學測銜接起點）",
+    "trendEmptyText": "11/10《109北模二》詞彙前 5 題 5/5 全對顯示單字語感良好；11/15 啟動 U1 五大句型 (p.1-8) 與 U2 時態 (至 p.15)。後續單元卷實測與寫作分數將直接繪製於真實走勢圖，不預設推測分數。"
   }
 };
 

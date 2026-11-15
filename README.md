@@ -23,3 +23,4 @@
 | **Joseph** | 高中英文 龍騰B3 段考頂標 | [https://tingzhenghome.github.io/student-growth-dashboard/students/joseph.html](https://tingzhenghome.github.io/student-growth-dashboard/students/joseph.html) |
 | **Ryan** | 全民英檢中級初試 (164分過標) | [https://tingzhenghome.github.io/student-growth-dashboard/students/ryan.html](https://tingzhenghome.github.io/student-growth-dashboard/students/ryan.html) |
 | **George** | 雅思核心進階打底 | [https://tingzhenghome.github.io/student-growth-dashboard/students/george.html](https://tingzhenghome.github.io/student-growth-dashboard/students/george.html) |
+| **奕鈞** | 高二英文文法重構與學測衝刺 | [https://tingzhenghome.github.io/student-growth-dashboard/students/yijun.html](https://tingzhenghome.github.io/student-growth-dashboard/students/yijun.html) |
